@@ -13,37 +13,111 @@ import {
   Image,
   FlatList,
   useState,
+  useRef,
   Button,
+  LayoutAnimation,
+  UIManager,
 } from "react-native";
 
 export default function Profile(props) {
-  const [tabHeight, setTabHeight] = React.useState(400);
+  const tabHeight = React.useRef(new Animated.Value(450)).current;
+  const avatarSize = React.useRef(new Animated.Value(150)).current;
+  const avatarRadius = React.useRef(new Animated.Value(27)).current;
+  const nameSize = React.useRef(new Animated.Value(40)).current;
+  const [contentFlex, setContentFlex] = React.useState("column");
+  // const contentFlex = React.useRef(new Animated.Value("column")).current;
+  const [contentAlign, setContentAlign] = React.useState("center");
+  // const contentAlign = React.useRef(new Animated.Value("center")).current;
+  const avatarMargin = React.useRef(new Animated.Value(22)).current;
+  const [profileExpanded, setProfileExpanded] = React.useState(true);
+
+  //Making sure the animations will work on Android
+  if (Platform.OS === "android") {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+  }
+
   expandProfile = () => {
-    return null;
+    LayoutAnimation.configureNext(
+      LayoutAnimation.create(200, "easeInEaseOut", "opacity")
+    );
+    Animated.spring(tabHeight, {
+      toValue: 450,
+    }).start();
+    Animated.spring(avatarSize, {
+      toValue: 150,
+    }).start();
+    Animated.spring(avatarRadius, {
+      toValue: 27,
+    }).start();
+    Animated.spring(nameSize, {
+      toValue: 40,
+    }).start();
+    setContentFlex("column");
+    setContentAlign("center");
+    Animated.spring(avatarMargin, {
+      toValue: 22,
+    }).start();
+    setProfileExpanded(true);
   };
 
   condenseProfile = () => {
-    return null;
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    Animated.spring(tabHeight, {
+      toValue: 150,
+    }).start();
+    Animated.spring(avatarSize, {
+      toValue: 64,
+    }).start();
+    Animated.spring(avatarRadius, {
+      toValue: 12,
+    }).start();
+    Animated.spring(nameSize, {
+      toValue: 30,
+    }).start();
+    setContentFlex("row");
+    setContentAlign("flex-start");
+    Animated.spring(avatarMargin, {
+      toValue: 0,
+    }).start();
+    setProfileExpanded(false);
   };
 
   return (
-    <View style={(styles.profile, { height: tabHeight })}>
+    <Animated.View style={[styles.profile, { height: tabHeight }]}>
       {/* <View style={styles.profile}> */}
-      <View style={styles.content}>
-        <View>
+      <Animated.View style={[styles.content, { alignItems: contentAlign }]}>
+        <Animated.View
+          style={{
+            flexDirection: contentFlex,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <TouchableOpacity
             onPress={() => {
-              setTabHeight(700);
+              profileExpanded ? condenseProfile() : expandProfile();
             }}
           >
-            <Image
-              style={styles.avatar}
+            <Animated.Image
+              style={[
+                styles.avatar,
+                {
+                  height: avatarSize,
+                  width: avatarSize,
+                  borderRadius: avatarRadius,
+                  marginBottom: avatarMargin,
+                },
+              ]}
               source={require("../assets/avatar.jpg")}
             />
           </TouchableOpacity>
-          <Text style={styles.name}>Freddy Q.</Text>
-        </View>
-      </View>
+          <Animated.Text style={[styles.name, { fontSize: nameSize }]}>
+            Freddy Q.
+          </Animated.Text>
+        </Animated.View>
+      </Animated.View>
       <View style={styles.counterGroup}>
         <View style={styles.counter}>
           <Text style={styles.number}>12</Text>
@@ -58,47 +132,40 @@ export default function Profile(props) {
           <Text style={styles.desc}>Life</Text>
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   profile: {
     backgroundColor: "#FFF",
-    paddingTop: 40,
+    paddingTop: 50,
     paddingHorizontal: 20,
-    // height: this.tabHeight,
   },
   content: {
-    alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    paddingTop: 60,
-    // backgroundColor: "#000000",
+    paddingTop: 20,
+    marginBottom: 38,
   },
   avatar: {
-    height: 150,
-    width: 150,
-    borderRadius: 27,
-    marginBottom: 22,
     alignSelf: "center",
   },
   name: {
-    fontSize: 40,
     color: "#3B3F43",
-    marginBottom: 38,
     alignSelf: "center",
+    marginHorizontal: 20,
   },
   counter: {
     flexDirection: "column",
     alignItems: "center",
     marginHorizontal: 40,
+    width: 70,
   },
   counterGroup: {
-    // flex: 1,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
     alignSelf: "center",
   },
   number: {
