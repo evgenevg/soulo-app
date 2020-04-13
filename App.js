@@ -12,22 +12,43 @@ import {
   TouchableWithoutFeedback,
   FlatList,
   useState,
+  useRef,
+  useEffect,
 } from "react-native";
-import Profile from "./components/Profile";
 
-// import { styles as s } from "react-native-style-tachyons";
+import * as Font from "expo-font";
+import { AppLoading } from "expo";
+
+import Profile from "./components/Profile";
+import Memories from "./components/Memories";
+
+const fetchFonts = () => {
+  return Font.loadAsync({
+    druk: require("./assets/fonts/druk.otf"),
+    sharp: require("./assets/fonts/Sharp.ttf"),
+  });
+};
 
 export default function App(props) {
+  const [fontsLoaded, setFontsLoaded] = React.useState(false);
+
+  if (!fontsLoaded) {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => setFontsLoaded(true)}
+        onError={(err) => console.log(err)}
+      />
+    );
+  }
+
   return (
     <View style={styles.view}>
       <Profile />
       <View style={styles.content}>
         <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
           <Text style={styles.headline}>Memories</Text>
-          <View style={styles.rec1}></View>
-          <View style={styles.rec1}></View>
-          <View style={styles.rec1}></View>
-          <View style={styles.rec1}></View>
+          <Memories />
         </ScrollView>
       </View>
     </View>
@@ -38,8 +59,6 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     backgroundColor: "#FFF",
-    // alignItems: "center",
-    // justifyContent: "center",
   },
   content: {
     minHeight: 200,
@@ -54,23 +73,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.07,
     shadowRadius: 15,
     elevation: 30,
-    // should move down on scroll
   },
   scroll: {
     height: "100%",
     marginHorizontal: 20,
   },
-  rec1: {
-    height: 300,
-    width: "100%",
-    backgroundColor: "#000000",
-    alignItems: "center",
-    marginTop: 40,
-    borderRadius: 15,
-  },
   headline: {
     fontSize: 35,
     color: "#000000",
     marginTop: 45,
+    marginBottom: 40,
+    fontFamily: "druk",
   },
 });

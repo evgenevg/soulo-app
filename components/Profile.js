@@ -25,9 +25,7 @@ export default function Profile(props) {
   const avatarRadius = React.useRef(new Animated.Value(27)).current;
   const nameSize = React.useRef(new Animated.Value(40)).current;
   const [contentFlex, setContentFlex] = React.useState("column");
-  // const contentFlex = React.useRef(new Animated.Value("column")).current;
   const [contentAlign, setContentAlign] = React.useState("center");
-  // const contentAlign = React.useRef(new Animated.Value("center")).current;
   const avatarMargin = React.useRef(new Animated.Value(22)).current;
   const [profileExpanded, setProfileExpanded] = React.useState(true);
 
@@ -155,25 +153,31 @@ const styles = StyleSheet.create({
     color: "#3B3F43",
     alignSelf: "center",
     marginHorizontal: 20,
+    fontFamily: "druk",
   },
   counter: {
     flexDirection: "column",
     alignItems: "center",
-    marginHorizontal: 40,
-    width: 70,
+    marginHorizontal: 0,
+    width: 120,
   },
   counterGroup: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
     alignSelf: "center",
+    width: "100%",
   },
   number: {
     fontSize: 27,
     alignSelf: "center",
+    fontFamily: "sharp",
+    color: "#3B3F43",
   },
   desc: {
     fontSize: 15,
     alignSelf: "center",
+    fontFamily: "sharp",
+    color: "#3B3F43",
   },
 });
