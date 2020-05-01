@@ -38,7 +38,7 @@ export default function Profile(props) {
 
   expandProfile = () => {
     LayoutAnimation.configureNext(
-      LayoutAnimation.create(200, "easeInEaseOut", "opacity")
+      LayoutAnimation.create(200, "easeInEaseOut", "scaleXY")
     );
     Animated.spring(tabHeight, {
       toValue: 450,
@@ -61,7 +61,9 @@ export default function Profile(props) {
   };
 
   condenseProfile = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    LayoutAnimation.configureNext(
+      LayoutAnimation.create(150, "easeInEaseOut", "scaleXY")
+    );
     Animated.spring(tabHeight, {
       toValue: 150,
     }).start();
@@ -139,6 +141,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     paddingTop: 50,
     paddingHorizontal: 20,
+    marginTop: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   content: {
     justifyContent: "center",

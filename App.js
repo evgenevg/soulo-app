@@ -21,6 +21,8 @@ import { AppLoading } from "expo";
 
 import Profile from "./components/Profile";
 import Memories from "./components/Memories";
+import CreateButton from "./components/CreateButton";
+import CreateSheet from "./components/CreateSheet";
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -31,6 +33,34 @@ const fetchFonts = () => {
 
 export default function App(props) {
   const [fontsLoaded, setFontsLoaded] = React.useState(false);
+  const [createSheetOpened, setCreateSheetOpened] = React.useState(false);
+  const scale = React.useRef(new Animated.Value(1)).current;
+  const opacity = React.useRef(new Animated.Value(1)).current;
+
+  toggleCreateSheet = () => {
+    if (createSheetOpened) {
+      setCreateSheetOpened(false);
+      Animated.timing(scale, {
+        toValue: 1,
+        duration: 300,
+        easing: Easing.in(),
+      }).start();
+      Animated.spring(opacity, {
+        toValue: 1,
+      }).start();
+    } else {
+      setCreateSheetOpened(true);
+      Animated.timing(scale, {
+        toValue: 0.9,
+        duration: 300,
+        easing: Easing.in(),
+      }).start();
+      Animated.spring(opacity, {
+        toValue: 0.5,
+      }).start();
+    }
+    // Main view is darkened
+  };
 
   if (!fontsLoaded) {
     return (
@@ -43,22 +73,50 @@ export default function App(props) {
   }
 
   return (
-    <View style={styles.view}>
-      <Profile />
-      <View style={styles.content}>
-        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-          <Text style={styles.headline}>Memories</Text>
-          <Memories />
-        </ScrollView>
-      </View>
-    </View>
+    <Animated.View style={[styles.view]}>
+      {createSheetOpened ? (
+        <CreateSheet
+          opened={createSheetOpened}
+          toggleCreateSheet={toggleCreateSheet}
+        />
+      ) : null}
+
+      <Animated.View
+        style={[
+          styles.container,
+          {
+            transform: [{ scale: scale }],
+            opacity: opacity,
+            height: "100%",
+          },
+        ]}
+      >
+        <Profile />
+        <View style={styles.content}>
+          <ScrollView
+            style={styles.scroll}
+            showsVerticalScrollIndicator={false}
+          >
+            <Text style={styles.headline}>Memories</Text>
+            <Memories />
+          </ScrollView>
+        </View>
+
+        <CreateButton toggleCreateSheet={toggleCreateSheet} />
+      </Animated.View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: "#000000",
+  },
+  container: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
   content: {
     minHeight: 200,

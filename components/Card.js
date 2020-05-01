@@ -11,28 +11,57 @@ import {
   StatusBar,
   Image,
   TouchableWithoutFeedback,
+  Dimensions,
 } from "react-native";
 
-export default function Card(props) {
+import FitImage from "react-native-fit-image";
+
+const winWidth = Dimensions.get("window").width;
+const winHeight = Dimensions.get("window").height;
+
+export default function Card({ source, text, sourceArray }) {
+  // const [imageWidth, setImageWidth] = React.useState(0);
+  // const [imageHeight, setImageHeight] = React.useState(0);
+  const [viewHeight, setViewHeight] = React.useState(300);
+  const [galleryHidden, setGalleryHidden] = React.useState(true);
+
+  React.useEffect(() => {
+    // setImageDimensions();
+    imageDisplayHeight();
+    sourceArray ? setGalleryHidden(false) : null;
+  });
+
+  setImageDimensions = () => {
+    // setImageWidth(Image.resolveAssetSource(source).width);
+    // setImageHeight(Image.resolveAssetSource(source).height);
+    const w = Image.resolveAssetSource(source).width;
+    const h = Image.resolveAssetSource(source).height;
+    return [w, h];
+  };
+
+  async function imageDisplayHeight() {
+    const [w, h] = await setImageDimensions();
+    setViewHeight(winWidth * (h / w));
+  }
+
   return (
     <View>
       <View style={styles.content}>
-        <Text style={styles.text}>
-          The single most important resource that we allocate from one day to
-          the next is our own time.
-        </Text>
-        <Image
-          style={styles.image}
-          source={require("../assets/data/center.jpg")}
-        />
-        {/* <Image
-          style={styles.image}
-          source={require("../assets/data/future.jpg")}
-        />
-        <Image
-          style={styles.image}
-          source={require("../assets/data/image.png")}
-        /> */}
+        {text ? <Text style={styles.text}>{text}</Text> : null}
+        <View>
+          {!galleryHidden ? (
+            <TouchableOpacity style={{ zIndex: 10 }}>
+              <Image
+                style={styles.galleryIcon}
+                source={require("../assets/icons/gallery.png")}
+              />
+            </TouchableOpacity>
+          ) : null}
+          <Image
+            style={[styles.image, { height: viewHeight }]}
+            source={source}
+          />
+        </View>
       </View>
       {/* content can be an image, a text or anything else */}
       <View style={styles.extraInfo}>
@@ -63,14 +92,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 15,
     resizeMode: "cover",
+    zIndex: 1,
     // maxHeight: 400,
-    height: 300,
   },
   extraInfo: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 40,
+    marginBottom: 60,
   },
   timestamp: {
     fontSize: 12,
@@ -80,5 +109,14 @@ const styles = StyleSheet.create({
   moreIcon: {
     width: 20,
     height: 8,
+  },
+  galleryIcon: {
+    width: 30,
+    height: 30,
+    position: "absolute",
+    right: 15,
+    top: 15,
+    backgroundColor: "#fff",
+    borderRadius: 7,
   },
 });
