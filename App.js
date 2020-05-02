@@ -23,6 +23,7 @@ import Profile from "./components/Profile";
 import Memories from "./components/Memories";
 import CreateButton from "./components/CreateButton";
 import CreateSheet from "./components/CreateSheet";
+import SettingsSheet from "./components/SettingsSheet";
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -36,30 +37,48 @@ export default function App(props) {
   const [createSheetOpened, setCreateSheetOpened] = React.useState(false);
   const scale = React.useRef(new Animated.Value(1)).current;
   const opacity = React.useRef(new Animated.Value(1)).current;
+  const [settingsOpened, setSettingsOpened] = React.useState(false);
 
   toggleCreateSheet = () => {
     if (createSheetOpened) {
       setCreateSheetOpened(false);
-      Animated.timing(scale, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.in(),
-      }).start();
-      Animated.spring(opacity, {
-        toValue: 1,
-      }).start();
+      unblurBackground();
     } else {
       setCreateSheetOpened(true);
-      Animated.timing(scale, {
-        toValue: 0.9,
-        duration: 300,
-        easing: Easing.in(),
-      }).start();
-      Animated.spring(opacity, {
-        toValue: 0.5,
-      }).start();
+      blurBackground();
     }
-    // Main view is darkened
+  };
+
+  toggleSettings = () => {
+    if (settingsOpened) {
+      setSettingsOpened(false);
+      unblurBackground();
+    } else {
+      setSettingsOpened(true);
+      blurBackground();
+    }
+  };
+
+  blurBackground = () => {
+    Animated.timing(scale, {
+      toValue: 0.9,
+      duration: 300,
+      easing: Easing.in(),
+    }).start();
+    Animated.spring(opacity, {
+      toValue: 0.5,
+    }).start();
+  };
+
+  unblurBackground = () => {
+    Animated.timing(scale, {
+      toValue: 1,
+      duration: 300,
+      easing: Easing.in(),
+    }).start();
+    Animated.spring(opacity, {
+      toValue: 1,
+    }).start();
   };
 
   if (!fontsLoaded) {
@@ -81,6 +100,13 @@ export default function App(props) {
         />
       ) : null}
 
+      {settingsOpened ? (
+        <SettingsSheet
+          opened={settingsOpened}
+          toggleSettings={toggleSettings}
+        />
+      ) : null}
+
       <Animated.View
         style={[
           styles.container,
@@ -91,7 +117,7 @@ export default function App(props) {
           },
         ]}
       >
-        <Profile />
+        <Profile toggleSettings={toggleSettings} />
         <View style={styles.content}>
           <ScrollView
             style={styles.scroll}

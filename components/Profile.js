@@ -19,7 +19,7 @@ import {
   UIManager,
 } from "react-native";
 
-export default function Profile(props) {
+export default function Profile({ toggleSettings }) {
   const tabHeight = React.useRef(new Animated.Value(450)).current;
   const avatarSize = React.useRef(new Animated.Value(150)).current;
   const avatarRadius = React.useRef(new Animated.Value(27)).current;
@@ -28,6 +28,8 @@ export default function Profile(props) {
   const [contentAlign, setContentAlign] = React.useState("center");
   const avatarMargin = React.useRef(new Animated.Value(22)).current;
   const [profileExpanded, setProfileExpanded] = React.useState(true);
+  const [settingsDisplayed, setSettingsDisplayed] = React.useState(true);
+  const settingsOpacity = React.useRef(new Animated.Value(100)).current;
 
   //Making sure the animations will work on Android
   if (Platform.OS === "android") {
@@ -58,6 +60,10 @@ export default function Profile(props) {
       toValue: 22,
     }).start();
     setProfileExpanded(true);
+    setSettingsDisplayed(true);
+    Animated.spring(settingsOpacity, {
+      toValue: 100,
+    }).start();
   };
 
   condenseProfile = () => {
@@ -82,11 +88,25 @@ export default function Profile(props) {
       toValue: 0,
     }).start();
     setProfileExpanded(false);
+    setSettingsDisplayed(false);
+    Animated.spring(settingsOpacity, {
+      toValue: 0,
+    }).start();
   };
 
   return (
     <Animated.View style={[styles.profile, { height: tabHeight }]}>
       {/* <View style={styles.profile}> */}
+      {settingsDisplayed ? (
+        <View>
+          <TouchableOpacity onPress={toggleSettings}>
+            <Animated.Image
+              source={require("../assets/icons/settings.png")}
+              style={[styles.settings, { opacity: settingsOpacity }]}
+            />
+          </TouchableOpacity>
+        </View>
+      ) : null}
       <Animated.View style={[styles.content, { alignItems: contentAlign }]}>
         <Animated.View
           style={{
@@ -139,7 +159,7 @@ export default function Profile(props) {
 const styles = StyleSheet.create({
   profile: {
     backgroundColor: "#FFF",
-    paddingTop: 50,
+    paddingTop: 30,
     paddingHorizontal: 20,
     marginTop: 10,
     borderTopLeftRadius: 20,
@@ -150,6 +170,11 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 20,
     marginBottom: 38,
+  },
+  settings: {
+    height: 30,
+    width: 30,
+    alignSelf: "flex-end",
   },
   avatar: {
     alignSelf: "center",
