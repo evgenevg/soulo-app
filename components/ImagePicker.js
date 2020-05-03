@@ -6,17 +6,20 @@ import {
   useState,
   useEffect,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
+import donwloadFile from "../data/DownloadFile";
 
 export default function ImagePick({ pickerTriggered, setPickerTriggered }) {
   const [image, setImage] = React.useState(false);
 
-  React.useEffect(() => {
-    getPermissionAsync();
-  });
+  // For testing purposes, removed this call on component did load. The permission should be triggered when the album function is called
+  // React.useEffect(() => {
+  //   getPermissionAsync();
+  // });
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -28,11 +31,11 @@ export default function ImagePick({ pickerTriggered, setPickerTriggered }) {
   };
 
   _pickImage = async () => {
+    getPermissionAsync();
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: false,
         quality: 1,
       });
       if (!result.cancelled) {
@@ -40,6 +43,8 @@ export default function ImagePick({ pickerTriggered, setPickerTriggered }) {
       }
 
       console.log(result);
+      donwloadFile(result.uri, "test");
+      // readFile("test");
     } catch (E) {
       console.log(E);
     }
@@ -52,8 +57,10 @@ export default function ImagePick({ pickerTriggered, setPickerTriggered }) {
 
   return (
     <View style={styles.view}>
-      {/* <Button title="Pick an image from camera roll" onPress={_pickImage} /> */}
-      {image && <Image source={{ uri: image }} style={styles.image} />}
+      <TouchableOpacity>
+        {/* <Button title="Pick an image from camera roll" onPress={_pickImage} /> */}
+        {image && <Image source={{ uri: image }} style={styles.image} />}
+      </TouchableOpacity>
     </View>
   );
 }

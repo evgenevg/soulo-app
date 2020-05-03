@@ -24,6 +24,7 @@ import {
 } from "react-native";
 
 import ImagePick from "./ImagePicker";
+import readFile from "../data/DownloadFile";
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -43,7 +44,7 @@ export default function CreateSheet({ opened, toggleCreateSheet }) {
   toggleSheet = () => {
     // this.focusInputWithKeyboard();
     Animated.spring(top, {
-      toValue: 100,
+      toValue: 60,
     }).start();
   };
 

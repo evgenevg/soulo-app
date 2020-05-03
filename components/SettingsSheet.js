@@ -31,7 +31,7 @@ export default function SettingsSheet({ opened, toggleSettings }) {
   toggleSheet = () => {
     // this.focusInputWithKeyboard();
     Animated.spring(top, {
-      toValue: 100,
+      toValue: 60,
     }).start();
   };
 
