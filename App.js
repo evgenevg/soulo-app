@@ -106,7 +106,6 @@ export default function App(props) {
           toggleSettings={toggleSettings}
         />
       ) : null}
-
       <Animated.View
         style={[
           styles.container,

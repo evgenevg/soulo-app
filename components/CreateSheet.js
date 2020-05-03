@@ -23,11 +23,14 @@ import {
   Image,
 } from "react-native";
 
+import ImagePick from "./ImagePicker";
+
 const screenHeight = Dimensions.get("window").height;
 
 export default function CreateSheet({ opened, toggleCreateSheet }) {
   const top = React.useRef(new Animated.Value(screenHeight)).current;
   const [message, setMessage] = React.useState("");
+  const [pickerTriggered, setPickerTriggered] = React.useState(false);
 
   inputRef = React.createRef();
 
@@ -55,6 +58,10 @@ export default function CreateSheet({ opened, toggleCreateSheet }) {
   if (opened) {
     toggleSheet();
   }
+
+  openAlbum = () => {
+    setPickerTriggered(true);
+  };
 
   return (
     <Animated.View style={[styles.sheet, { top: top }]}>
@@ -84,10 +91,12 @@ export default function CreateSheet({ opened, toggleCreateSheet }) {
           />
         </View> */}
         <View style={[styles.placeholder]}>
-          <Image
-            source={require("../assets/icons/album.png")}
-            style={styles.contentIcon}
-          />
+          <TouchableOpacity onPress={openAlbum}>
+            <Image
+              source={require("../assets/icons/album.png")}
+              style={styles.contentIcon}
+            />
+          </TouchableOpacity>
         </View>
         <View style={[styles.placeholder]}>
           <Image
@@ -102,7 +111,10 @@ export default function CreateSheet({ opened, toggleCreateSheet }) {
           />
         </View>
       </View>
-      <View style={styles.sendButton} />
+      <ImagePick
+        pickerTriggered={pickerTriggered}
+        setPickerTriggered={setPickerTriggered}
+      />
     </Animated.View>
   );
 }
