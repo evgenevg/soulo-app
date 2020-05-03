@@ -57,10 +57,11 @@ export default function Card({ source, text, sourceArray }) {
               />
             </TouchableOpacity>
           ) : null}
-          <Image
+          {/* <Image
             style={[styles.image, { height: viewHeight }]}
             source={source}
-          />
+          /> */}
+          <Image style={[styles.image, { height: 300 }]} source={source} />
         </View>
       </View>
       {/* content can be an image, a text or anything else */}
