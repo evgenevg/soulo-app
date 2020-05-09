@@ -9,12 +9,12 @@ const { v4: uuidv4 } = require("uuid");
 const addDataToDb = (fileUri, image_id, height, width) => {
   db.transaction((tx) => {
     tx.executeSql(
-      "create table if not exists Images_db (id integer primary key not null, uri string, image_id string, date string, height integer, width integer);",
+      "create table if not exists imgs (id integer primary key not null, uri string, image_id string, date string, height integer, width integer);",
       []
     );
 
     tx.executeSql(
-      "insert into Images_db (uri, image_id, date, height, width) values (?, ?, ?, ?, ?)",
+      "insert into imgs (uri, image_id, date, height, width) values (?, ?, ?, ?, ?)",
       [fileUri, image_id, moment().format("YYYY-MM-DD hh:mm:ss"), height, width]
     );
   });

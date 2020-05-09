@@ -121,13 +121,9 @@ export default function App(props) {
       >
         <Profile toggleSettings={toggleSettings} />
         <View style={styles.content}>
-          <ScrollView
-            style={styles.scroll}
-            showsVerticalScrollIndicator={false}
-          >
-            <Text style={styles.headline}>Memories</Text>
+          <View style={styles.scroll}>
             <Memories fetchData={fetchData} setFetchData={setFetchData} />
-          </ScrollView>
+          </View>
         </View>
 
         <CreateButton toggleCreateSheet={toggleCreateSheet} />

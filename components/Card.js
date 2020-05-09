@@ -16,42 +16,27 @@ import {
 
 import FitImage from "react-native-fit-image";
 
-// const winWidth = Dimensions.get("window").width;
+const winWidth = Dimensions.get("window").width;
 // const winHeight = Dimensions.get("window").height;
 
-export default function Card({
-  source,
-  text,
-  sourceArray,
-  height,
-  width,
-  viewHeight,
-}) {
+export default function Card({ source, text, sourceArray, image_id, posts }) {
   // const [imageWidth, setImageWidth] = React.useState(0);
-  // const [imageHeight, setImageHeight] = React.useState(0);
+  const [imageHeight, setImageHeight] = React.useState(0);
+  const [uri, setUri] = React.useState(null);
 
   const [galleryHidden, setGalleryHidden] = React.useState(true);
 
   React.useEffect(() => {
-    // setImageDimensions();
-    // imageDisplayHeight();
-
     sourceArray ? setGalleryHidden(false) : null;
   });
 
-  // setImageDimensions = () => {
-  //   // setImageWidth(Image.resolveAssetSource(source).width);
-  //   // setImageHeight(Image.resolveAssetSource(source).height);
-  //   const w = Image.resolveAssetSource(source).width;
-  //   const h = Image.resolveAssetSource(source).height;
-  //   return [w, h];
-  // };
-
-  // async function imageDisplayHeight() {
-  //   // const [w, h] = await setImageDimensions();
-  //   const winWidth = Dimensions.get("window").width;
-  //   setViewHeight(winWidth * (height / width));
-  // }
+  if (image_id && !uri) {
+    setUri(posts.find((x) => x.image_id === image_id).uri);
+    height = posts.find((x) => x.image_id === image_id).height;
+    width = posts.find((x) => x.image_id === image_id).width;
+    viewHeight = winWidth * (height / width);
+    setImageHeight(viewHeight);
+  }
 
   return (
     <View>
@@ -70,11 +55,12 @@ export default function Card({
             style={[styles.image, { height: viewHeight }]}
             source={source}
           /> */}
-
-          <Image
-            style={[styles.image, { height: viewHeight }]}
-            source={source}
-          />
+          {uri ? (
+            <Image
+              style={[styles.image, { height: imageHeight }]}
+              source={{ uri: uri }}
+            />
+          ) : null}
         </View>
       </View>
       {/* content can be an image, a text or anything else */}

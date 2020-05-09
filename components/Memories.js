@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,6 +13,7 @@ import {
   useState,
   useEffect,
   Dimensions,
+  FlatList,
 } from "react-native";
 
 import { AppLoading } from "expo";
@@ -29,14 +30,25 @@ export default function Memories({ fetchData, setFetchData }) {
   const [postsLoaded, setPostsLoaded] = React.useState(false);
   const [viewHeight, setViewHeight] = React.useState(300);
 
-  React.useEffect(() => {
-    // getData();
-  });
+  React.useEffect(() => {});
 
   async function getData() {
     await db.transaction((tx) => {
       tx.executeSql(
-        "SELECT * FROM Images_db ORDER BY id DESC",
+        "SELECT * FROM memories ORDER BY id DESC",
+        [],
+        (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push(results.rows.item(i));
+          }
+          setMemories(temp);
+        }
+      );
+    });
+    await db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM imgs ORDER BY id DESC",
         [],
         (tx, results) => {
           var temp = [];
@@ -44,20 +56,9 @@ export default function Memories({ fetchData, setFetchData }) {
             temp.push(results.rows.item(i));
           }
           setPosts(temp);
-          // setPostsLoaded(true);
         }
       );
     });
-    // await db.transaction((tx) => {
-    //   tx.executeSql("SELECT * FROM test", [], (tx, results) => {
-    //     var temp = [];
-    //     for (let i = 0; i < results.rows.length; ++i) {
-    //       temp.push(results.rows.item(i));
-    //     }
-    //     console.log(temp);
-    //     setMemories(temp);
-    //   });
-    // });
   }
 
   if (fetchData) {
@@ -78,7 +79,26 @@ export default function Memories({ fetchData, setFetchData }) {
 
   return (
     <View>
-      {posts
+      {memories && posts ? (
+        <FlatList
+          data={memories}
+          ListHeaderComponent={<Text style={styles.headline}>Memories</Text>}
+          renderItem={({ item: element }) => (
+            <Card
+              key={element.id}
+              text={element.text}
+              posts={posts}
+              // source={{
+              //   uri: posts.find((x) => x.image_id === element.image0).uri,
+              // }}
+              image_id={element.image0}
+            />
+          )}
+          keyExtractor={(element) => element.id}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : null}
+      {/* {posts
         ? posts.map((element) => (
             <Card
               source={{
@@ -90,12 +110,7 @@ export default function Memories({ fetchData, setFetchData }) {
               viewHeight={winWidth * (element.height / element.width)}
             />
           ))
-        : console.log("loading")}
-      {/* <Card
-        source={{
-          uri: posts[0].uri,
-        }}
-      /> */}
+        : console.log("loading")} */}
 
       <Card
         source={require("../assets/data/center.jpg")}
@@ -103,11 +118,6 @@ export default function Memories({ fetchData, setFetchData }) {
           "The single most important resource that we allocate from one day to the next is our own time."
         }
       />
-      {/* <Card
-        source={{
-          uri: "",
-        }}
-      /> */}
       <Card source={require("../assets/data/future.jpg")} sourceArray="hey" />
       <Card source={require("../assets/data/image.png")} text={"I love art!"} />
       <Card
@@ -118,4 +128,17 @@ export default function Memories({ fetchData, setFetchData }) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  scroll: {
+    height: "100%",
+    paddingHorizontal: 20,
+    marginHorizontal: 20,
+  },
+  headline: {
+    fontSize: 35,
+    color: "#000000",
+    marginTop: 45,
+    marginBottom: 40,
+    fontFamily: "druk",
+  },
+});
