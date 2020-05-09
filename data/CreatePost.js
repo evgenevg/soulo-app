@@ -91,4 +91,6 @@ export default async function createPost(
   addDataToDb(text, imageIDs, album, book, podcast, link);
 
   console.log("the post is saved!");
+
+  return true;
 }

@@ -29,7 +29,11 @@ import createPost from "../data/CreatePost";
 
 const screenHeight = Dimensions.get("window").height;
 
-export default function CreateSheet({ opened, toggleCreateSheet }) {
+export default function CreateSheet({
+  opened,
+  toggleCreateSheet,
+  setFetchData,
+}) {
   const top = React.useRef(new Animated.Value(screenHeight)).current;
   const [message, setMessage] = React.useState("");
   const [images, setImages] = React.useState([]);
@@ -68,12 +72,16 @@ export default function CreateSheet({ opened, toggleCreateSheet }) {
     setPickerTriggered(true);
   };
 
-  sendPost = () => {
-    console.log(
-      "Sending the followign to the function: " +
-        [message, images, heights, widths]
-    );
-    createPost(message, images, heights, widths);
+  sendPost = async () => {
+    if (message || images.length > 0) {
+      let post = await createPost(message, images, heights, widths);
+      console.log(
+        "Sending the following payload to the function: " +
+          [message, images, heights, widths]
+      );
+      setFetchData(true);
+    }
+    toggleCreateSheet();
   };
 
   return (

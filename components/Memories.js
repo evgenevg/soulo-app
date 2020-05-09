@@ -23,7 +23,7 @@ const db = SQLite.openDatabase("posts");
 import Card from "./Card";
 const winWidth = Dimensions.get("window").width;
 
-export default function Memories() {
+export default function Memories({ fetchData, setFetchData }) {
   const [posts, setPosts] = React.useState(null);
   const [memories, setMemories] = React.useState(null);
   const [postsLoaded, setPostsLoaded] = React.useState(false);
@@ -34,31 +34,36 @@ export default function Memories() {
   });
 
   async function getData() {
-    // await db.transaction((tx) => {
-    //   tx.executeSql(
-    //     "SELECT * FROM Images_db ORDER BY id DESC",
-    //     [],
-    //     (tx, results) => {
-    //       var temp = [];
-    //       for (let i = 0; i < results.rows.length; ++i) {
-    //         temp.push(results.rows.item(i));
-    //       }
-    //       setPosts(temp);
-    //       // setPostsLoaded(true);
-    //     }
-    //   );
-    // });
-
     await db.transaction((tx) => {
-      tx.executeSql("SELECT * FROM test", [], (tx, results) => {
-        var temp = [];
-        for (let i = 0; i < results.rows.length; ++i) {
-          temp.push(results.rows.item(i));
+      tx.executeSql(
+        "SELECT * FROM Images_db ORDER BY id DESC",
+        [],
+        (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push(results.rows.item(i));
+          }
+          setPosts(temp);
+          // setPostsLoaded(true);
         }
-        console.log(temp);
-        setMemories(temp);
-      });
+      );
     });
+    // await db.transaction((tx) => {
+    //   tx.executeSql("SELECT * FROM test", [], (tx, results) => {
+    //     var temp = [];
+    //     for (let i = 0; i < results.rows.length; ++i) {
+    //       temp.push(results.rows.item(i));
+    //     }
+    //     console.log(temp);
+    //     setMemories(temp);
+    //   });
+    // });
+  }
+
+  if (fetchData) {
+    getData();
+    console.log("the manual refresh is triggered! \n \n \n Yo yo!");
+    setFetchData(false);
   }
 
   if (!postsLoaded) {

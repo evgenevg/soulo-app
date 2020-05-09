@@ -38,6 +38,7 @@ export default function App(props) {
   const scale = React.useRef(new Animated.Value(1)).current;
   const opacity = React.useRef(new Animated.Value(1)).current;
   const [settingsOpened, setSettingsOpened] = React.useState(false);
+  const [fetchData, setFetchData] = React.useState(false);
 
   toggleCreateSheet = () => {
     if (createSheetOpened) {
@@ -97,6 +98,8 @@ export default function App(props) {
         <CreateSheet
           opened={createSheetOpened}
           toggleCreateSheet={toggleCreateSheet}
+          fetchData={fetchData}
+          setFetchData={setFetchData}
         />
       ) : null}
 
@@ -123,7 +126,7 @@ export default function App(props) {
             showsVerticalScrollIndicator={false}
           >
             <Text style={styles.headline}>Memories</Text>
-            <Memories />
+            <Memories fetchData={fetchData} setFetchData={setFetchData} />
           </ScrollView>
         </View>
 
