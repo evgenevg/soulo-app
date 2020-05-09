@@ -25,12 +25,16 @@ import {
 
 import ImagePick from "./ImagePicker";
 import readFile from "../data/DownloadFile";
+import createPost from "../data/CreatePost";
 
 const screenHeight = Dimensions.get("window").height;
 
 export default function CreateSheet({ opened, toggleCreateSheet }) {
   const top = React.useRef(new Animated.Value(screenHeight)).current;
   const [message, setMessage] = React.useState("");
+  const [images, setImages] = React.useState([]);
+  const [heights, setHeights] = React.useState([]);
+  const [widths, setWidths] = React.useState([]);
   const [pickerTriggered, setPickerTriggered] = React.useState(false);
 
   inputRef = React.createRef();
@@ -64,13 +68,21 @@ export default function CreateSheet({ opened, toggleCreateSheet }) {
     setPickerTriggered(true);
   };
 
+  sendPost = () => {
+    console.log(
+      "Sending the followign to the function: " +
+        [message, images, heights, widths]
+    );
+    createPost(message, images, heights, widths);
+  };
+
   return (
     <Animated.View style={[styles.sheet, { top: top }]}>
       <View style={styles.topBar}>
         <TouchableOpacity onPress={closeSheet}>
           <Text style={styles.sendButton}>Back</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={closeSheet}>
+        <TouchableOpacity onPress={sendPost}>
           <Text style={styles.sendButton}>Send</Text>
         </TouchableOpacity>
       </View>
@@ -115,6 +127,12 @@ export default function CreateSheet({ opened, toggleCreateSheet }) {
       <ImagePick
         pickerTriggered={pickerTriggered}
         setPickerTriggered={setPickerTriggered}
+        images={images}
+        heights={heights}
+        widths={widths}
+        setImages={setImages}
+        setHeights={setHeights}
+        setWidths={setWidths}
       />
     </Animated.View>
   );

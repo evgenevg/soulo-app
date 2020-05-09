@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   useState,
   useEffect,
+  Dimensions,
 } from "react-native";
 
 import { AppLoading } from "expo";
@@ -20,24 +21,42 @@ import * as SQLite from "expo-sqlite";
 const db = SQLite.openDatabase("posts");
 
 import Card from "./Card";
+const winWidth = Dimensions.get("window").width;
 
 export default function Memories() {
   const [posts, setPosts] = React.useState(null);
+  const [memories, setMemories] = React.useState(null);
   const [postsLoaded, setPostsLoaded] = React.useState(false);
+  const [viewHeight, setViewHeight] = React.useState(300);
 
   React.useEffect(() => {
     // getData();
   });
 
   async function getData() {
+    // await db.transaction((tx) => {
+    //   tx.executeSql(
+    //     "SELECT * FROM Images_db ORDER BY id DESC",
+    //     [],
+    //     (tx, results) => {
+    //       var temp = [];
+    //       for (let i = 0; i < results.rows.length; ++i) {
+    //         temp.push(results.rows.item(i));
+    //       }
+    //       setPosts(temp);
+    //       // setPostsLoaded(true);
+    //     }
+    //   );
+    // });
+
     await db.transaction((tx) => {
-      tx.executeSql("SELECT * FROM DataTable", [], (tx, results) => {
+      tx.executeSql("SELECT * FROM test", [], (tx, results) => {
         var temp = [];
         for (let i = 0; i < results.rows.length; ++i) {
           temp.push(results.rows.item(i));
         }
-        setPosts(temp);
-        setPostsLoaded(true);
+        console.log(temp);
+        setMemories(temp);
       });
     });
   }
@@ -60,6 +79,10 @@ export default function Memories() {
               source={{
                 uri: element.uri,
               }}
+              key={element.uri}
+              height={element.height}
+              width={element.width}
+              viewHeight={winWidth * (element.height / element.width)}
             />
           ))
         : console.log("loading")}
@@ -86,21 +109,8 @@ export default function Memories() {
         source={require("../assets/data/me.jpg")}
         text={"Luke, I am your father"}
       />
-      <View style={styles.rec1}></View>
-      <View style={styles.rec1}></View>
-      <View style={styles.rec1}></View>
-      <View style={styles.rec1}></View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  rec1: {
-    height: 300,
-    width: "100%",
-    backgroundColor: "#000000",
-    alignItems: "center",
-    marginTop: 40,
-    borderRadius: 15,
-  },
-});
+const styles = StyleSheet.create({});

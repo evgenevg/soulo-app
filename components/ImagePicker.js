@@ -13,8 +13,18 @@ import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import donwloadFile from "../data/DownloadFile";
 
-export default function ImagePick({ pickerTriggered, setPickerTriggered }) {
+export default function ImagePick({
+  pickerTriggered,
+  setPickerTriggered,
+  images,
+  setImages,
+  heights,
+  setHeights,
+  widths,
+  setWidths,
+}) {
   const [image, setImage] = React.useState(false);
+  const [result, setResult] = React.useState(false);
 
   // For testing purposes, removed this call on component did load. The permission should be triggered when the album function is called
   // React.useEffect(() => {
@@ -40,10 +50,21 @@ export default function ImagePick({ pickerTriggered, setPickerTriggered }) {
       });
       if (!result.cancelled) {
         setImage(result.uri);
-      }
 
-      console.log(result);
-      donwloadFile(result.uri, "test");
+        console.log(images);
+        var imgs = images.concat(result.uri);
+        console.log(images);
+        setImages(imgs);
+
+        var hght = heights.concat(result.height);
+        console.log(hght);
+        setHeights(hght);
+
+        var wdth = widths.concat(result.width);
+        console.log(wdth);
+        setWidths(wdth);
+      }
+      // donwloadFile(result.uri, result.height, result.width);
       // readFile("test");
     } catch (E) {
       console.log(E);

@@ -16,33 +16,42 @@ import {
 
 import FitImage from "react-native-fit-image";
 
-const winWidth = Dimensions.get("window").width;
-const winHeight = Dimensions.get("window").height;
+// const winWidth = Dimensions.get("window").width;
+// const winHeight = Dimensions.get("window").height;
 
-export default function Card({ source, text, sourceArray }) {
+export default function Card({
+  source,
+  text,
+  sourceArray,
+  height,
+  width,
+  viewHeight,
+}) {
   // const [imageWidth, setImageWidth] = React.useState(0);
   // const [imageHeight, setImageHeight] = React.useState(0);
-  const [viewHeight, setViewHeight] = React.useState(300);
+
   const [galleryHidden, setGalleryHidden] = React.useState(true);
 
   React.useEffect(() => {
     // setImageDimensions();
-    imageDisplayHeight();
+    // imageDisplayHeight();
+
     sourceArray ? setGalleryHidden(false) : null;
   });
 
-  setImageDimensions = () => {
-    // setImageWidth(Image.resolveAssetSource(source).width);
-    // setImageHeight(Image.resolveAssetSource(source).height);
-    const w = Image.resolveAssetSource(source).width;
-    const h = Image.resolveAssetSource(source).height;
-    return [w, h];
-  };
+  // setImageDimensions = () => {
+  //   // setImageWidth(Image.resolveAssetSource(source).width);
+  //   // setImageHeight(Image.resolveAssetSource(source).height);
+  //   const w = Image.resolveAssetSource(source).width;
+  //   const h = Image.resolveAssetSource(source).height;
+  //   return [w, h];
+  // };
 
-  async function imageDisplayHeight() {
-    const [w, h] = await setImageDimensions();
-    setViewHeight(winWidth * (h / w));
-  }
+  // async function imageDisplayHeight() {
+  //   // const [w, h] = await setImageDimensions();
+  //   const winWidth = Dimensions.get("window").width;
+  //   setViewHeight(winWidth * (height / width));
+  // }
 
   return (
     <View>
@@ -61,7 +70,11 @@ export default function Card({ source, text, sourceArray }) {
             style={[styles.image, { height: viewHeight }]}
             source={source}
           /> */}
-          <Image style={[styles.image, { height: 300 }]} source={source} />
+
+          <Image
+            style={[styles.image, { height: viewHeight }]}
+            source={source}
+          />
         </View>
       </View>
       {/* content can be an image, a text or anything else */}
