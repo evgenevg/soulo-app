@@ -30,6 +30,7 @@ export default function Card({
   date,
   eraseAlert,
   post_id,
+  image1,
 }) {
   // const [imageWidth, setImageWidth] = React.useState(0);
   const [imageHeight, setImageHeight] = React.useState(0);
@@ -64,7 +65,7 @@ export default function Card({
       <View style={styles.content}>
         {text ? <Text style={styles.text}>{text}</Text> : null}
         <View>
-          {!galleryHidden ? (
+          {image1 ? (
             <TouchableOpacity style={{ zIndex: 10 }}>
               <Image
                 style={styles.galleryIcon}

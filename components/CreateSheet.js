@@ -41,6 +41,13 @@ export default function CreateSheet({
   const [widths, setWidths] = React.useState([]);
   const [pickerTriggered, setPickerTriggered] = React.useState(false);
 
+  resetState = () => {
+    setMessage("");
+    setImages([]);
+    setHeights([]);
+    setWidths([]);
+  };
+
   inputRef = React.createRef();
 
   focusInputWithKeyboard = () => {
@@ -74,7 +81,7 @@ export default function CreateSheet({
 
   sendPost = async () => {
     if (message || images.length > 0) {
-      let post = await createPost(message, images, heights, widths);
+      await createPost(message, images, heights, widths);
       console.log(
         "Sending the following payload to the function: " +
           [message, images, heights, widths]
@@ -82,6 +89,7 @@ export default function CreateSheet({
       setFetchData(true);
     }
     toggleCreateSheet();
+    resetState();
   };
 
   return (

@@ -1,8 +1,7 @@
-var moment = require("moment");
-
 import * as SQLite from "expo-sqlite";
 import donwloadFile from "./DownloadFile";
 const db = SQLite.openDatabase("posts");
+var moment = require("moment");
 
 const addDataToDb = (
   text = null,
@@ -13,7 +12,11 @@ const addDataToDb = (
   link = null
 ) => {
   console.log("the funtion is called with the following images " + images);
-  var i;
+
+  // resetting the global variables first, so that the images from previous posts are not added here
+  for (i = 0; i < 11; i++) {
+    this["image" + i] = null;
+  }
   if (images) {
     for (i = 0; i < images.length; i++) {
       this["image" + i] = images[i];
@@ -49,16 +52,6 @@ const addDataToDb = (
       ]
     );
   });
-
-  //   db.transaction((tx) => {
-  //     tx.executeSql("SELECT * FROM memories", [], (tx, results) => {
-  //       var temp = [];
-  //       for (let i = 0; i < results.rows.length; ++i) {
-  //         temp.push(results.rows.item(i));
-  //       }
-  //       // console.log(temp);
-  //     });
-  //   });
 };
 
 export default async function createPost(
@@ -74,6 +67,7 @@ export default async function createPost(
   // for image in images, save image into their image_db
   console.log("images are received in the create post: " + images);
   imageIDs = [];
+  console.log("the image payload is : " + imageIDs);
 
   console.log(typeof images);
   console.log(Object.keys(images).length);
@@ -86,6 +80,7 @@ export default async function createPost(
     console.log("the image array with ids looks like this: " + imageIDs);
   }
 
+  console.log("sending this payload to the post creator: " + text + imageIDs);
   addDataToDb(text, imageIDs, album, book, podcast, link);
 
   console.log("the post is saved!");

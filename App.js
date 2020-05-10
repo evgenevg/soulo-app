@@ -39,6 +39,7 @@ export default function App(props) {
   const opacity = React.useRef(new Animated.Value(1)).current;
   const [settingsOpened, setSettingsOpened] = React.useState(false);
   const [fetchData, setFetchData] = React.useState(false);
+  const [postsNum, setPostsNum] = React.useState(0);
 
   toggleCreateSheet = () => {
     if (createSheetOpened) {
@@ -119,10 +120,14 @@ export default function App(props) {
           },
         ]}
       >
-        <Profile toggleSettings={toggleSettings} />
+        <Profile toggleSettings={toggleSettings} postsNum={postsNum} />
         <View style={styles.content}>
           <View style={styles.scroll}>
-            <Memories fetchData={fetchData} setFetchData={setFetchData} />
+            <Memories
+              fetchData={fetchData}
+              setFetchData={setFetchData}
+              setPostsNum={setPostsNum}
+            />
           </View>
         </View>
 

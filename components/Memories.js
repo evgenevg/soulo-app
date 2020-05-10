@@ -15,6 +15,7 @@ import {
   Dimensions,
   FlatList,
   Alert,
+  setPostsNum,
 } from "react-native";
 
 import { AppLoading } from "expo";
@@ -26,7 +27,7 @@ import Card from "./Card";
 import erasePost from "../data/ErasePost";
 const winWidth = Dimensions.get("window").width;
 
-export default function Memories({ fetchData, setFetchData }) {
+export default function Memories({ fetchData, setFetchData, setPostsNum }) {
   const [posts, setPosts] = React.useState(null);
   const [memories, setMemories] = React.useState(null);
   const [postsLoaded, setPostsLoaded] = React.useState(false);
@@ -63,6 +64,7 @@ export default function Memories({ fetchData, setFetchData }) {
             temp.push(results.rows.item(i));
           }
           setMemories(temp);
+          setPostsNum(temp.length);
         }
       );
     });
@@ -115,6 +117,7 @@ export default function Memories({ fetchData, setFetchData }) {
               //   uri: posts.find((x) => x.image_id === element.image0).uri,
               // }}
               image_id={element.image0}
+              image1={element.image1}
             />
           )}
           keyExtractor={(element) => element.id.toString()}

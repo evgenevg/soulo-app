@@ -1,5 +1,4 @@
 import * as SQLite from "expo-sqlite";
-import donwloadFile from "./DownloadFile";
 const db = SQLite.openDatabase("posts");
 
 export default async function erasePost(post_id) {

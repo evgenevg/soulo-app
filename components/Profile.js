@@ -19,7 +19,7 @@ import {
   UIManager,
 } from "react-native";
 
-export default function Profile({ toggleSettings }) {
+export default function Profile({ toggleSettings, postsNum }) {
   const tabHeight = React.useRef(new Animated.Value(450)).current;
   const avatarSize = React.useRef(new Animated.Value(150)).current;
   const avatarRadius = React.useRef(new Animated.Value(27)).current;
@@ -140,7 +140,7 @@ export default function Profile({ toggleSettings }) {
       </Animated.View>
       <View style={styles.counterGroup}>
         <View style={styles.counter}>
-          <Text style={styles.number}>12</Text>
+          <Text style={styles.number}>{postsNum}</Text>
           <Text style={styles.desc}>Memories</Text>
         </View>
         <View style={styles.counter}>
