@@ -32,12 +32,16 @@ export default function SettingsSheet({ opened, toggleSettings }) {
     // this.focusInputWithKeyboard();
     Animated.spring(top, {
       toValue: 60,
+      speed: 10,
+      bounciness: 4,
     }).start();
   };
 
   closeSheet = () => {
     Animated.spring(top, {
       toValue: screenHeight,
+      speed: 6,
+      bounciness: 2,
     }).start();
     toggleSettings();
     Keyboard.dismiss();

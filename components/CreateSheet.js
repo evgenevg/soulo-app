@@ -40,13 +40,14 @@ export default function CreateSheet({
   const [heights, setHeights] = React.useState([]);
   const [widths, setWidths] = React.useState([]);
   const [pickerTriggered, setPickerTriggered] = React.useState(false);
+  const [postSent, setPostSent] = React.useState(false);
 
-  resetState = () => {
-    setMessage("");
-    setImages([]);
-    setHeights([]);
-    setWidths([]);
-  };
+  // resetState = () => {
+  //   setMessage("");
+  //   setImages([]);
+  //   setHeights([]);
+  //   setWidths([]);
+  // };
 
   inputRef = React.createRef();
 
@@ -60,12 +61,16 @@ export default function CreateSheet({
     // this.focusInputWithKeyboard();
     Animated.spring(top, {
       toValue: 60,
+      speed: 6,
+      bounciness: 2,
     }).start();
   };
 
   closeSheet = () => {
     Animated.spring(top, {
       toValue: screenHeight,
+      speed: 6,
+      bounciness: 2,
     }).start();
     toggleCreateSheet();
     Keyboard.dismiss();
@@ -86,11 +91,17 @@ export default function CreateSheet({
         "Sending the following payload to the function: " +
           [message, images, heights, widths]
       );
-      setFetchData(true);
     }
     toggleCreateSheet();
-    resetState();
+    setTimeout(() => {
+      setFetchData({ timePassed: true });
+    }, 250);
   };
+
+  // if (postSent) {
+  //   toggleCreateSheet();
+  //   setPostSent(false);
+  // }
 
   return (
     <Animated.View style={[styles.sheet, { top: top }]}>

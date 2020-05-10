@@ -11,8 +11,6 @@ const addDataToDb = (
   podcast = null,
   link = null
 ) => {
-  console.log("the funtion is called with the following images " + images);
-
   // resetting the global variables first, so that the images from previous posts are not added here
   for (i = 0; i < 11; i++) {
     this["image" + i] = null;
@@ -64,23 +62,13 @@ export default async function createPost(
   podcast = null,
   link = null
 ) {
-  // for image in images, save image into their image_db
-  console.log("images are received in the create post: " + images);
   imageIDs = [];
-  console.log("the image payload is : " + imageIDs);
 
-  console.log(typeof images);
-  console.log(Object.keys(images).length);
   for (i = 0; i < Object.keys(images).length; i++) {
-    console.log("executing the download funciton on: " + images[i]);
     image_id = await donwloadFile(images[i], heights[i], widths[i]);
-    console.log(typeof image_id);
-    console.log("the image is saved with the following id: " + image_id);
     imageIDs.push(image_id);
-    console.log("the image array with ids looks like this: " + imageIDs);
   }
 
-  console.log("sending this payload to the post creator: " + text + imageIDs);
   addDataToDb(text, imageIDs, album, book, podcast, link);
 
   console.log("the post is saved!");

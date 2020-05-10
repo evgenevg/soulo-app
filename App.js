@@ -24,6 +24,7 @@ import Memories from "./components/Memories";
 import CreateButton from "./components/CreateButton";
 import CreateSheet from "./components/CreateSheet";
 import SettingsSheet from "./components/SettingsSheet";
+import createPost from "./data/CreatePost";
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -41,7 +42,7 @@ export default function App(props) {
   const [fetchData, setFetchData] = React.useState(false);
   const [postsNum, setPostsNum] = React.useState(0);
 
-  toggleCreateSheet = () => {
+  toggleCreateSheet = async () => {
     if (createSheetOpened) {
       setCreateSheetOpened(false);
       unblurBackground();
@@ -49,6 +50,7 @@ export default function App(props) {
       setCreateSheetOpened(true);
       blurBackground();
     }
+    return true;
   };
 
   toggleSettings = () => {
@@ -104,12 +106,7 @@ export default function App(props) {
         />
       ) : null}
 
-      {settingsOpened ? (
-        <SettingsSheet
-          opened={settingsOpened}
-          toggleSettings={toggleSettings}
-        />
-      ) : null}
+      <SettingsSheet opened={settingsOpened} toggleSettings={toggleSettings} />
       <Animated.View
         style={[
           styles.container,
