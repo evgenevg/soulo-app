@@ -14,6 +14,7 @@ import {
   useEffect,
   Dimensions,
   FlatList,
+  Alert,
 } from "react-native";
 
 import { AppLoading } from "expo";
@@ -22,6 +23,7 @@ import * as SQLite from "expo-sqlite";
 const db = SQLite.openDatabase("posts");
 
 import Card from "./Card";
+import erasePost from "../data/ErasePost";
 const winWidth = Dimensions.get("window").width;
 
 export default function Memories({ fetchData, setFetchData }) {
@@ -30,12 +32,30 @@ export default function Memories({ fetchData, setFetchData }) {
   const [postsLoaded, setPostsLoaded] = React.useState(false);
   const [viewHeight, setViewHeight] = React.useState(300);
 
-  React.useEffect(() => {});
+  eraseAlert = (post_id) => {
+    Alert.alert(
+      "Erase Memory?",
+      "Some memories just need to go...",
+      [
+        {
+          text: "Keep",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "Erase",
+          onPress: () => erasePost(post_id).then(setFetchData(true)),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   async function getData() {
     await db.transaction((tx) => {
       tx.executeSql(
-        "SELECT * FROM memories ORDER BY id DESC",
+        "SELECT * FROM memories_db WHERE erased = 0 ORDER BY id DESC",
         [],
         (tx, results) => {
           var temp = [];
@@ -87,14 +107,17 @@ export default function Memories({ fetchData, setFetchData }) {
             <Card
               key={element.id}
               text={element.text}
+              date={element.date}
               posts={posts}
+              eraseAlert={eraseAlert}
+              post_id={element.id}
               // source={{
               //   uri: posts.find((x) => x.image_id === element.image0).uri,
               // }}
               image_id={element.image0}
             />
           )}
-          keyExtractor={(element) => element.id}
+          keyExtractor={(element) => element.id.toString()}
           showsVerticalScrollIndicator={false}
         />
       ) : null}
@@ -111,19 +134,6 @@ export default function Memories({ fetchData, setFetchData }) {
             />
           ))
         : console.log("loading")} */}
-
-      <Card
-        source={require("../assets/data/center.jpg")}
-        text={
-          "The single most important resource that we allocate from one day to the next is our own time."
-        }
-      />
-      <Card source={require("../assets/data/future.jpg")} sourceArray="hey" />
-      <Card source={require("../assets/data/image.png")} text={"I love art!"} />
-      <Card
-        source={require("../assets/data/me.jpg")}
-        text={"Luke, I am your father"}
-      />
     </View>
   );
 }

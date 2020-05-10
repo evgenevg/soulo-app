@@ -14,15 +14,27 @@ import {
   Dimensions,
 } from "react-native";
 
+var moment = require("moment");
+
 import FitImage from "react-native-fit-image";
 
 const winWidth = Dimensions.get("window").width;
 // const winHeight = Dimensions.get("window").height;
 
-export default function Card({ source, text, sourceArray, image_id, posts }) {
+export default function Card({
+  source,
+  text,
+  sourceArray,
+  image_id,
+  posts,
+  date,
+  eraseAlert,
+  post_id,
+}) {
   // const [imageWidth, setImageWidth] = React.useState(0);
   const [imageHeight, setImageHeight] = React.useState(0);
   const [uri, setUri] = React.useState(null);
+  const [time, setTime] = React.useState(null);
 
   const [galleryHidden, setGalleryHidden] = React.useState(true);
 
@@ -31,11 +43,20 @@ export default function Card({ source, text, sourceArray, image_id, posts }) {
   });
 
   if (image_id && !uri) {
-    setUri(posts.find((x) => x.image_id === image_id).uri);
-    height = posts.find((x) => x.image_id === image_id).height;
-    width = posts.find((x) => x.image_id === image_id).width;
-    viewHeight = winWidth * (height / width);
-    setImageHeight(viewHeight);
+    try {
+      setUri(posts.find((x) => x.image_id === image_id).uri);
+      height = posts.find((x) => x.image_id === image_id).height;
+      width = posts.find((x) => x.image_id === image_id).width;
+      viewHeight = winWidth * (height / width);
+      setImageHeight(viewHeight);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  if (!time) {
+    postDate = moment(date, "YYYY-MM-DD hh:mm:ss").calendar();
+    setTime(postDate);
   }
 
   return (
@@ -65,8 +86,8 @@ export default function Card({ source, text, sourceArray, image_id, posts }) {
       </View>
       {/* content can be an image, a text or anything else */}
       <View style={styles.extraInfo}>
-        <Text style={styles.timestamp}>Yesterday at 9:20 PM</Text>
-        <TouchableOpacity>
+        <Text style={styles.timestamp}>{time}</Text>
+        <TouchableOpacity onPress={() => eraseAlert(post_id)}>
           <Image
             style={styles.moreIcon}
             source={require("../assets/icons/more.png")}

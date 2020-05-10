@@ -23,12 +23,12 @@ const addDataToDb = (
 
   db.transaction((tx) => {
     tx.executeSql(
-      "create table if not exists memories (id integer primary key not null, date string, text string, image0 string, image1 string, image2 string, image3 string, image4 string, image5 string, image6 string, image7 string, image8 string, image9 string, album string, book integer, podcast integer, link integer);",
+      "create table if not exists memories_db (id integer primary key not null, date string, text string, image0 string, image1 string, image2 string, image3 string, image4 string, image5 string, image6 string, image7 string, image8 string, image9 string, album string, book integer, podcast integer, link integer, erased integer);",
       []
     );
 
     tx.executeSql(
-      "insert into memories (date, text, album, book, podcast, link, image0, image1, image2, image3, image4, image5, image6, image7, image8, image9) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "insert into memories_db (date, text, album, book, podcast, link, image0, image1, image2, image3, image4, image5, image6, image7, image8, image9, erased) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
       [
         moment().format("YYYY-MM-DD hh:mm:ss"),
         text,
@@ -50,17 +50,15 @@ const addDataToDb = (
     );
   });
 
-  // console.log(text);
-
-  db.transaction((tx) => {
-    tx.executeSql("SELECT * FROM memories", [], (tx, results) => {
-      var temp = [];
-      for (let i = 0; i < results.rows.length; ++i) {
-        temp.push(results.rows.item(i));
-      }
-      // console.log(temp);
-    });
-  });
+  //   db.transaction((tx) => {
+  //     tx.executeSql("SELECT * FROM memories", [], (tx, results) => {
+  //       var temp = [];
+  //       for (let i = 0; i < results.rows.length; ++i) {
+  //         temp.push(results.rows.item(i));
+  //       }
+  //       // console.log(temp);
+  //     });
+  //   });
 };
 
 export default async function createPost(
