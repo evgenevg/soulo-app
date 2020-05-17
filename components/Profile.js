@@ -14,12 +14,26 @@ import {
   FlatList,
   useState,
   useRef,
+  useEffect,
   Button,
   LayoutAnimation,
   UIManager,
 } from "react-native";
+import { AppLoading } from "expo";
 
-export default function Profile({ toggleSettings, postsNum }) {
+import * as SQLite from "expo-sqlite";
+import createProfile from "../data/CreateProfile";
+const db = SQLite.openDatabase("profile_db");
+var moment = require("moment");
+
+// moment.now().diff(moment(profileData[0].date, "YYYY-MM-DD hh:mm:ss"))
+
+export default function Profile({
+  toggleSettings,
+  postsNum,
+  profileData,
+  setProfileData,
+}) {
   const tabHeight = React.useRef(new Animated.Value(450)).current;
   const avatarSize = React.useRef(new Animated.Value(150)).current;
   const avatarRadius = React.useRef(new Animated.Value(27)).current;
@@ -30,6 +44,7 @@ export default function Profile({ toggleSettings, postsNum }) {
   const [profileExpanded, setProfileExpanded] = React.useState(true);
   const [settingsDisplayed, setSettingsDisplayed] = React.useState(true);
   const settingsOpacity = React.useRef(new Animated.Value(100)).current;
+  const [profileLoaded, setProfileLoaded] = React.useState(false);
 
   //Making sure the animations will work on Android
   if (Platform.OS === "android") {
@@ -94,9 +109,33 @@ export default function Profile({ toggleSettings, postsNum }) {
     }).start();
   };
 
+  fetchProfile = async () => {
+    createProfile();
+    db.transaction((tx) => {
+      tx.executeSql("SELECT * FROM profile_table", [], (tx, results) => {
+        var temp = [];
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(i));
+        }
+        setProfileData(temp);
+      });
+    });
+  };
+
+  if (!profileLoaded) {
+    return (
+      <AppLoading
+        startAsync={fetchProfile}
+        onFinish={() => setProfileLoaded(true)}
+        onError={(err) => console.log(err)}
+      />
+    );
+  }
+
   return (
     <Animated.View style={[styles.profile, { height: tabHeight }]}>
       {/* <View style={styles.profile}> */}
+      {console.log(profileData)}
       {settingsDisplayed ? (
         <View>
           <TouchableOpacity onPress={toggleSettings}>
@@ -120,22 +159,30 @@ export default function Profile({ toggleSettings, postsNum }) {
               profileExpanded ? condenseProfile() : expandProfile();
             }}
           >
-            <Animated.Image
-              style={[
-                styles.avatar,
-                {
-                  height: avatarSize,
-                  width: avatarSize,
-                  borderRadius: avatarRadius,
-                  marginBottom: avatarMargin,
-                },
-              ]}
-              source={require("../assets/avatar.jpg")}
-            />
+            {profileData ? (
+              <Animated.Image
+                style={[
+                  styles.avatar,
+                  {
+                    height: avatarSize,
+                    width: avatarSize,
+                    borderRadius: avatarRadius,
+                    marginBottom: avatarMargin,
+                  },
+                ]}
+                source={{ uri: profileData[0].avatar_uri }}
+              />
+            ) : null}
           </TouchableOpacity>
-          <Animated.Text style={[styles.name, { fontSize: nameSize }]}>
-            Freddy Q.
-          </Animated.Text>
+          {profileData ? (
+            <Animated.Text style={[styles.name, { fontSize: nameSize }]}>
+              {profileData[0].name}
+            </Animated.Text>
+          ) : (
+            <Animated.Text style={[styles.name, { fontSize: nameSize }]}>
+              Loading...
+            </Animated.Text>
+          )}
         </Animated.View>
       </Animated.View>
       <View style={styles.counterGroup}>
@@ -144,7 +191,7 @@ export default function Profile({ toggleSettings, postsNum }) {
           <Text style={styles.desc}>Memories</Text>
         </View>
         <View style={styles.counter}>
-          <Text style={styles.number}>320</Text>
+          <Text style={styles.number}>310</Text>
           <Text style={styles.desc}>Days</Text>
         </View>
         <View style={styles.counter}>

@@ -41,6 +41,7 @@ export default function App(props) {
   const [settingsOpened, setSettingsOpened] = React.useState(false);
   const [fetchData, setFetchData] = React.useState(false);
   const [postsNum, setPostsNum] = React.useState(0);
+  const [profileData, setProfileData] = React.useState(0);
 
   toggleCreateSheet = async () => {
     if (createSheetOpened) {
@@ -106,7 +107,12 @@ export default function App(props) {
         />
       ) : null}
 
-      <SettingsSheet opened={settingsOpened} toggleSettings={toggleSettings} />
+      <SettingsSheet
+        opened={settingsOpened}
+        toggleSettings={toggleSettings}
+        profileData={profileData}
+        setProfileData={setProfileData}
+      />
       <Animated.View
         style={[
           styles.container,
@@ -117,7 +123,12 @@ export default function App(props) {
           },
         ]}
       >
-        <Profile toggleSettings={toggleSettings} postsNum={postsNum} />
+        <Profile
+          toggleSettings={toggleSettings}
+          postsNum={postsNum}
+          profileData={profileData}
+          setProfileData={setProfileData}
+        />
         <View style={styles.content}>
           <View style={styles.scroll}>
             <Memories

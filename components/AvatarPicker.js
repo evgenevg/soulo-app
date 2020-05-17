@@ -9,21 +9,16 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import * as FileSystem from "expo-file-system";
+const { v4: uuidv4 } = require("uuid");
+
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import donwloadFile from "../data/DownloadFile";
+import updateAvatar from "../data/UpdateAvatar";
 
-export default function ImagePick({
-  pickerTriggered,
-  setPickerTriggered,
-  images,
-  setImages,
-  heights,
-  setHeights,
-  widths,
-  setWidths,
-}) {
+export default function AvatarPicker({ pickerTriggered, setPickerTriggered }) {
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -41,23 +36,18 @@ export default function ImagePick({
         allowsEditing: false,
         allowsMultipleSelection: true,
         quality: 1,
+        allowsEditing: true,
+        aspect: [1, 1],
       });
       if (!result.cancelled) {
-        console.log(images);
-        var imgs = images.concat(result.uri);
-        console.log(images);
-        setImages(imgs);
-
-        var hght = heights.concat(result.height);
-        console.log(hght);
-        setHeights(hght);
-
-        var wdth = widths.concat(result.width);
-        console.log(wdth);
-        setWidths(wdth);
+        const fileUri = FileSystem.documentDirectory + uuidv4();
+        let downloadObject = FileSystem.createDownloadResumable(
+          result.uri,
+          fileUri
+        );
+        let response = await downloadObject.downloadAsync();
+        await updateAvatar(response.uri, 500, 500);
       }
-      // donwloadFile(result.uri, result.height, result.width);
-      // readFile("test");
     } catch (E) {
       console.log(E);
     }
@@ -68,20 +58,7 @@ export default function ImagePick({
     setPickerTriggered(false);
   }
 
-  return (
-    <View>
-      <ScrollView
-        style={styles.view}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-      >
-        {images &&
-          images.map((x) => (
-            <Image source={{ uri: x }} style={styles.image} key={x} />
-          ))}
-      </ScrollView>
-    </View>
-  );
+  return <View></View>;
 }
 
 const styles = StyleSheet.create({
