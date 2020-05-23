@@ -26,6 +26,7 @@ import {
 import ImagePick from "./ImagePicker";
 import readFile from "../data/DownloadFile";
 import createPost from "../data/CreatePost";
+import Search from "./Search";
 
 const screenHeight = Dimensions.get("window").height;
 
@@ -41,6 +42,8 @@ export default function CreateSheet({
   const [widths, setWidths] = React.useState([]);
   const [pickerTriggered, setPickerTriggered] = React.useState(false);
   const [postSent, setPostSent] = React.useState(false);
+  const [searchOpened, setSearchOpened] = React.useState(false);
+  const [book, setBook] = React.useState([]);
 
   // resetState = () => {
   //   setMessage("");
@@ -84,18 +87,30 @@ export default function CreateSheet({
     setPickerTriggered(true);
   };
 
+  openSearch = () => {
+    setSearchOpened(true);
+  };
+
   sendPost = async () => {
-    if (message || images.length > 0) {
-      await createPost(message, images, heights, widths);
+    if (message || images.length > 0 || book) {
+      await createPost(message, images, heights, widths, book);
       console.log(
         "Sending the following payload to the function: " +
-          [message, images, heights, widths]
+          [message, images, heights, widths, book]
       );
     }
     toggleCreateSheet();
     setTimeout(() => {
       setFetchData({ timePassed: true });
     }, 250);
+  };
+
+  toggleSearch = () => {
+    if (searchOpened) {
+      setSearchOpened(false);
+    } else {
+      setSettingsOpened(true);
+    }
   };
 
   // if (postSent) {
@@ -105,62 +120,74 @@ export default function CreateSheet({
 
   return (
     <Animated.View style={[styles.sheet, { top: top }]}>
-      <View style={styles.topBar}>
-        <TouchableOpacity onPress={closeSheet}>
-          <Text style={styles.sendButton}>Back</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={sendPost}>
-          <Text style={styles.sendButton}>Send</Text>
-        </TouchableOpacity>
-      </View>
-      <TextInput
-        ref={this.inputRef}
-        style={styles.input}
-        placeholder="What's on your mind?"
-        keyboardAppearance="dark"
-        selectionColor="#000000"
-        autoFocus={true}
-        value={message}
-        onChangeText={(message) => setMessage(message)}
-      />
-      <View style={styles.actionBar}>
-        {/* <View style={[styles.placeholder]}>
+      {searchOpened ? (
+        <Search
+          opened={searchOpened}
+          toggleSearch={toggleSearch}
+          setBook={setBook}
+        />
+      ) : null}
+      <View style={{ paddingHorizontal: 20, marginTop: 50 }}>
+        <View style={styles.topBar}>
+          <TouchableOpacity onPress={closeSheet}>
+            <Text style={styles.sendButton}>Back</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={sendPost}>
+            <Text style={styles.sendButton}>Send</Text>
+          </TouchableOpacity>
+        </View>
+        <TextInput
+          ref={this.inputRef}
+          style={styles.input}
+          placeholder="What's on your mind?"
+          keyboardAppearance="dark"
+          selectionColor="#000000"
+          autoFocus={true}
+          value={message}
+          onChangeText={(message) => setMessage(message)}
+        />
+        <Text>{book}</Text>
+        <View style={styles.actionBar}>
+          {/* <View style={[styles.placeholder]}>
           <Image
             source={require("../assets/icons/camera.png")}
             style={styles.contentIcon}
           />
         </View> */}
-        <View style={[styles.placeholder]}>
-          <TouchableOpacity onPress={openAlbum}>
+          <View style={[styles.placeholder]}>
+            <TouchableOpacity onPress={openAlbum}>
+              <Image
+                source={require("../assets/icons/album.png")}
+                style={styles.contentIcon}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.placeholder]}>
+            <TouchableOpacity onPress={openSearch}>
+              <Image
+                source={require("../assets/icons/book.png")}
+                style={styles.contentIcon}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.placeholder]}>
             <Image
-              source={require("../assets/icons/album.png")}
+              source={require("../assets/icons/music.png")}
               style={styles.contentIcon}
             />
-          </TouchableOpacity>
+          </View>
         </View>
-        <View style={[styles.placeholder]}>
-          <Image
-            source={require("../assets/icons/book.png")}
-            style={styles.contentIcon}
-          />
-        </View>
-        <View style={[styles.placeholder]}>
-          <Image
-            source={require("../assets/icons/music.png")}
-            style={styles.contentIcon}
-          />
-        </View>
+        <ImagePick
+          pickerTriggered={pickerTriggered}
+          setPickerTriggered={setPickerTriggered}
+          images={images}
+          heights={heights}
+          widths={widths}
+          setImages={setImages}
+          setHeights={setHeights}
+          setWidths={setWidths}
+        />
       </View>
-      <ImagePick
-        pickerTriggered={pickerTriggered}
-        setPickerTriggered={setPickerTriggered}
-        images={images}
-        heights={heights}
-        widths={widths}
-        setImages={setImages}
-        setHeights={setHeights}
-        setWidths={setWidths}
-      />
     </Animated.View>
   );
 }
@@ -171,8 +198,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: 20,
-    paddingTop: 50,
-    paddingHorizontal: 20,
     overflow: "hidden",
     backgroundColor: "#f0f3f5",
   },

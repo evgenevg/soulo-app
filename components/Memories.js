@@ -30,6 +30,7 @@ const winWidth = Dimensions.get("window").width;
 export default function Memories({ fetchData, setFetchData, setPostsNum }) {
   const [posts, setPosts] = React.useState(null);
   const [memories, setMemories] = React.useState(null);
+  const [books, setBooks] = React.useState(null);
   const [postsLoaded, setPostsLoaded] = React.useState(false);
   const [viewHeight, setViewHeight] = React.useState(300);
 
@@ -65,6 +66,7 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
           }
           setMemories(temp);
           setPostsNum(temp.length);
+          console.log(temp);
         }
       );
     });
@@ -81,12 +83,25 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
         }
       );
     });
+    await db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM books ORDER BY id DESC",
+        [],
+        (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push(results.rows.item(i));
+          }
+          setBooks(temp);
+        }
+      );
+    });
   }
 
   if (fetchData) {
+    setFetchData(false);
     getData();
     console.log("the manual refresh is triggered! \n \n \n Yo yo!");
-    setFetchData(false);
   }
 
   if (!postsLoaded) {
@@ -118,6 +133,8 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
               // }}
               image_id={element.image0}
               image1={element.image1}
+              book={element.book}
+              books={books}
             />
           )}
           keyExtractor={(element) => element.id.toString()}

@@ -31,11 +31,16 @@ export default function Card({
   eraseAlert,
   post_id,
   image1,
+  book,
+  books,
 }) {
   // const [imageWidth, setImageWidth] = React.useState(0);
   const [imageHeight, setImageHeight] = React.useState(0);
   const [uri, setUri] = React.useState(null);
   const [time, setTime] = React.useState(null);
+  const [bookTitle, setBookTitle] = React.useState("");
+  const [bookAuthor, setBookAuthor] = React.useState("");
+  const [bookPic, setBookPic] = React.useState("");
 
   const [galleryHidden, setGalleryHidden] = React.useState(true);
 
@@ -44,12 +49,23 @@ export default function Card({
   });
 
   if (image_id && !uri) {
+    console.log(image_id);
     try {
       setUri(posts.find((x) => x.image_id === image_id).uri);
       height = posts.find((x) => x.image_id === image_id).height;
       width = posts.find((x) => x.image_id === image_id).width;
       viewHeight = winWidth * (height / width);
       setImageHeight(viewHeight);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  if (book && !bookAuthor) {
+    try {
+      setBookTitle(books.find((x) => x.book_id === book).title);
+      setBookAuthor(books.find((x) => x.book_id === book).author);
+      setBookPic(books.find((x) => x.book_id === book).image_uri);
     } catch (error) {
       console.log(error);
     }
@@ -64,6 +80,15 @@ export default function Card({
     <View>
       <View style={styles.content}>
         {text ? <Text style={styles.text}>{text}</Text> : null}
+        {bookAuthor ? (
+          <View style={styles.bookView}>
+            <Image style={styles.bookImage} source={{ uri: bookPic }} />
+            <View style={{ paddingLeft: 10, paddingRight: 20 }}>
+              <Text style={styles.bookTitle}>{bookTitle}</Text>
+              <Text style={styles.bookAuthor}>{bookAuthor}</Text>
+            </View>
+          </View>
+        ) : null}
         <View>
           {image1 ? (
             <TouchableOpacity style={{ zIndex: 10 }}>
@@ -140,5 +165,29 @@ const styles = StyleSheet.create({
     top: 15,
     backgroundColor: "#fff",
     borderRadius: 7,
+  },
+  bookView: {
+    width: "100%",
+    paddingVertical: 15,
+    borderRadius: 13,
+    backgroundColor: "#F1F1F1",
+    flexDirection: "row",
+    paddingHorizontal: 15,
+    marginBottom: 20,
+  },
+  bookImage: {
+    height: 76,
+    width: 56,
+    borderRadius: 5,
+  },
+  bookTitle: {
+    fontSize: 15,
+    fontFamily: "druk",
+    color: "#3B3F43",
+  },
+  bookAuthor: {
+    fontSize: 14,
+    fontFamily: "sharp",
+    color: "#5C6369",
   },
 });

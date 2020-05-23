@@ -27,6 +27,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-cli": "^2.0.1",
     "react-native-fit-image": "^1.5.5",
+    "react-native-google-books": "^1.0.4",
     "react-native-style-tachyons": "^4.0.0",
     "react-native-web": "~0.11.7"
   },
