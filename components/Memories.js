@@ -67,7 +67,6 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
           }
           setMemories(temp);
           setPostsNum(temp.length);
-          console.log(temp);
         }
       );
     });
@@ -129,11 +128,16 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
               posts={posts}
               eraseAlert={eraseAlert}
               post_id={element.id}
-              // source={{
-              //   uri: posts.find((x) => x.image_id === element.image0).uri,
-              // }}
               image_id={element.image0}
               image1={element.image1}
+              image2={element.image2}
+              image3={element.image3}
+              image4={element.image4}
+              image5={element.image5}
+              image6={element.image6}
+              image7={element.image7}
+              image8={element.image8}
+              image9={element.image9}
               book={element.book}
               books={books}
               navigation={navigation}

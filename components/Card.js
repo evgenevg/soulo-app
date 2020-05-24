@@ -28,11 +28,19 @@ export default function Card({
   text,
   sourceArray,
   image_id,
+  image1,
+  image2,
+  image3,
+  image4,
+  image5,
+  image6,
+  image7,
+  image8,
+  image9,
   posts,
   date,
   eraseAlert,
   post_id,
-  image1,
   book,
   books,
 }) {
@@ -40,28 +48,62 @@ export default function Card({
   const [imageHeight, setImageHeight] = React.useState(0);
   const [uri, setUri] = React.useState(null);
   const [time, setTime] = React.useState(null);
+  const [timeFrom, setTimeFrom] = React.useState(null);
   const [bookTitle, setBookTitle] = React.useState("");
   const [bookAuthor, setBookAuthor] = React.useState("");
   const [bookPic, setBookPic] = React.useState("");
   const [galleryHidden, setGalleryHidden] = React.useState(true);
+  const [imageURIs, setImageURIs] = React.useState([]);
+  const [imageHeights, setImageHeights] = React.useState([]);
 
   const navigation = useNavigation();
+  const images = [
+    image_id,
+    image1,
+    image2,
+    image3,
+    image4,
+    image5,
+    image6,
+    image7,
+    image8,
+    image9,
+  ];
+
+  if (imageURIs.length === 0 && image_id) {
+    images.map((image) => {
+      if (image != null) {
+        const values = getImage(image);
+        const uris = imageURIs;
+        uris.push(values[0]);
+        setImageURIs(uris);
+        const heights = imageHeights;
+        heights.push(values[1]);
+        setImageHeights(heights);
+      }
+    });
+  }
 
   React.useEffect(() => {
     sourceArray ? setGalleryHidden(false) : null;
   });
 
   if (image_id && !uri) {
-    console.log(image_id);
+    const values = getImage(image_id);
+    setUri(values[0]);
+    setImageHeight(values[1]);
+  }
+
+  function getImage(image_id) {
     try {
-      setUri(posts.find((x) => x.image_id === image_id).uri);
+      image_uri = posts.find((x) => x.image_id === image_id).uri;
       height = posts.find((x) => x.image_id === image_id).height;
       width = posts.find((x) => x.image_id === image_id).width;
       viewHeight = winWidth * (height / width);
-      setImageHeight(viewHeight);
     } catch (error) {
       console.log(error);
     }
+    return [image_uri, viewHeight];
   }
 
   if (book && !bookAuthor) {
@@ -77,12 +119,27 @@ export default function Card({
   if (!time) {
     postDate = moment(date, "YYYY-MM-DD hh:mm:ss").calendar();
     setTime(postDate);
+    setTimeFrom(moment(date, "YYYY-MM-DD hh:mm:ss").fromNow());
   }
 
   return (
     <View>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Details", { text: text })}
+        activeOpacity={1}
+        onPress={() =>
+          navigation.navigate("Details", {
+            text: text,
+            time: time,
+            bookAuthor: bookAuthor,
+            bookPic: bookPic,
+            bookTitle: bookTitle,
+            uri: uri,
+            imageHeight: imageHeight,
+            timeFrom: timeFrom,
+            imageURIs: imageURIs,
+            imageHeights: imageHeights,
+          })
+        }
       >
         <View style={styles.content}>
           {text ? <Text style={styles.text}>{text}</Text> : null}
@@ -104,10 +161,6 @@ export default function Card({
                 />
               </TouchableOpacity>
             ) : null}
-            {/* <Image
-            style={[styles.image, { height: viewHeight }]}
-            source={source}
-          /> */}
             {uri ? (
               <Image
                 style={[styles.image, { height: imageHeight }]}
