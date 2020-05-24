@@ -16,6 +16,7 @@ import {
   FlatList,
   Alert,
   setPostsNum,
+  navigation,
 } from "react-native";
 
 import { AppLoading } from "expo";
@@ -135,6 +136,7 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
               image1={element.image1}
               book={element.book}
               books={books}
+              navigation={navigation}
             />
           )}
           keyExtractor={(element) => element.id.toString()}

@@ -12,11 +12,13 @@ import {
   Image,
   TouchableWithoutFeedback,
   Dimensions,
+  navigation,
 } from "react-native";
 
 var moment = require("moment");
 
 import FitImage from "react-native-fit-image";
+import { useNavigation } from "@react-navigation/native";
 
 const winWidth = Dimensions.get("window").width;
 // const winHeight = Dimensions.get("window").height;
@@ -41,8 +43,9 @@ export default function Card({
   const [bookTitle, setBookTitle] = React.useState("");
   const [bookAuthor, setBookAuthor] = React.useState("");
   const [bookPic, setBookPic] = React.useState("");
-
   const [galleryHidden, setGalleryHidden] = React.useState(true);
+
+  const navigation = useNavigation();
 
   React.useEffect(() => {
     sourceArray ? setGalleryHidden(false) : null;
@@ -78,48 +81,52 @@ export default function Card({
 
   return (
     <View>
-      <View style={styles.content}>
-        {text ? <Text style={styles.text}>{text}</Text> : null}
-        {bookAuthor ? (
-          <View style={styles.bookView}>
-            <Image style={styles.bookImage} source={{ uri: bookPic }} />
-            <View style={{ paddingLeft: 10, paddingRight: 20 }}>
-              <Text style={styles.bookTitle}>{bookTitle}</Text>
-              <Text style={styles.bookAuthor}>{bookAuthor}</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Details", { text: text })}
+      >
+        <View style={styles.content}>
+          {text ? <Text style={styles.text}>{text}</Text> : null}
+          {bookAuthor ? (
+            <View style={styles.bookView}>
+              <Image style={styles.bookImage} source={{ uri: bookPic }} />
+              <View style={{ paddingLeft: 10, paddingRight: 20 }}>
+                <Text style={styles.bookTitle}>{bookTitle}</Text>
+                <Text style={styles.bookAuthor}>{bookAuthor}</Text>
+              </View>
             </View>
-          </View>
-        ) : null}
-        <View>
-          {image1 ? (
-            <TouchableOpacity style={{ zIndex: 10 }}>
-              <Image
-                style={styles.galleryIcon}
-                source={require("../assets/icons/gallery.png")}
-              />
-            </TouchableOpacity>
           ) : null}
-          {/* <Image
+          <View>
+            {image1 ? (
+              <TouchableOpacity style={{ zIndex: 10 }}>
+                <Image
+                  style={styles.galleryIcon}
+                  source={require("../assets/icons/gallery.png")}
+                />
+              </TouchableOpacity>
+            ) : null}
+            {/* <Image
             style={[styles.image, { height: viewHeight }]}
             source={source}
           /> */}
-          {uri ? (
-            <Image
-              style={[styles.image, { height: imageHeight }]}
-              source={{ uri: uri }}
-            />
-          ) : null}
+            {uri ? (
+              <Image
+                style={[styles.image, { height: imageHeight }]}
+                source={{ uri: uri }}
+              />
+            ) : null}
+          </View>
         </View>
-      </View>
-      {/* content can be an image, a text or anything else */}
-      <View style={styles.extraInfo}>
-        <Text style={styles.timestamp}>{time}</Text>
-        <TouchableOpacity onPress={() => eraseAlert(post_id)}>
-          <Image
-            style={styles.moreIcon}
-            source={require("../assets/icons/more.png")}
-          />
-        </TouchableOpacity>
-      </View>
+        {/* content can be an image, a text or anything else */}
+        <View style={styles.extraInfo}>
+          <Text style={styles.timestamp}>{time}</Text>
+          <TouchableOpacity onPress={() => eraseAlert(post_id)}>
+            <Image
+              style={styles.moreIcon}
+              source={require("../assets/icons/more.png")}
+            />
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
