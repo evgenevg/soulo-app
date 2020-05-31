@@ -37,7 +37,6 @@ export default async function createProfile() {
       for (let i = 0; i < results.rows.length; ++i) {
         temp.push(results.rows.item(i));
       }
-      // console.log(temp);
       if (temp.length > 0) {
         return temp;
       } else {

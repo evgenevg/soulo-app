@@ -68,24 +68,11 @@ export default function ImagePick({
     setPickerTriggered(false);
   }
 
-  return (
-    <View>
-      <ScrollView
-        style={styles.view}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-      >
-        {images &&
-          images.map((x) => (
-            <Image source={{ uri: x }} style={styles.image} key={x} />
-          ))}
-      </ScrollView>
-    </View>
-  );
+  return <View></View>;
 }
 
 const styles = StyleSheet.create({
-  view: {
+  preview: {
     width: "100%",
     flexDirection: "row",
     alignContent: "flex-start",

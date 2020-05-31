@@ -109,6 +109,18 @@ export default function CreateSheet({
     }
   };
 
+  removeImage = (index) => {
+    if (images.length > 1) {
+      setImages(images.splice(index, index + 1));
+      setHeights(heights.splice(index, index + 1));
+      setWidths(widths.splice(index, index + 1));
+    } else {
+      setImages([]);
+      setHeights([]);
+      setWidths([]);
+    }
+  };
+
   return (
     <Animated.View style={[styles.sheet, { top: top }]}>
       {searchOpened ? (
@@ -139,16 +151,7 @@ export default function CreateSheet({
           value={message}
           onChangeText={(message) => setMessage(message)}
         />
-        {/* Preview of the payload, will be removed later */}
-        <Text>{book}</Text>
-        <Text>{album}</Text>
         <View style={styles.actionBar}>
-          {/* <View style={[styles.placeholder]}>
-          <Image
-            source={require("../assets/icons/camera.png")}
-            style={styles.contentIcon}
-          />
-        </View> */}
           <View style={[styles.placeholder]}>
             <TouchableOpacity onPress={openAlbum}>
               <Image
@@ -184,6 +187,28 @@ export default function CreateSheet({
           setHeights={setHeights}
           setWidths={setWidths}
         />
+        <ScrollView
+          style={styles.preview}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          {images &&
+            images.map((x, i) => (
+              <TouchableOpacity onPress={() => removeImage(i)} key={x}>
+                <Image source={{ uri: x }} style={styles.image} />
+              </TouchableOpacity>
+            ))}
+          {book[0] && (
+            <TouchableOpacity onPress={() => setBook([])}>
+              <Image source={{ uri: book[2] }} style={styles.image} />
+            </TouchableOpacity>
+          )}
+          {album[0] && (
+            <TouchableOpacity onPress={() => setAlbum([])}>
+              <Image source={{ uri: album[2] }} style={styles.image} />
+            </TouchableOpacity>
+          )}
+        </ScrollView>
       </View>
     </Animated.View>
   );
@@ -228,5 +253,16 @@ const styles = StyleSheet.create({
     width: 80,
     backgroundColor: "#E8E8E8",
     borderRadius: 9,
+  },
+  preview: {
+    width: "100%",
+    flexDirection: "row",
+    alignContent: "flex-start",
+  },
+  image: {
+    width: 150,
+    height: 150,
+    borderRadius: 12,
+    marginRight: 15,
   },
 });

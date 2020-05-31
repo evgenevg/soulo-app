@@ -134,8 +134,7 @@ export default function Profile({
 
   return (
     <Animated.View style={[styles.profile, { height: tabHeight }]}>
-      {/* <View style={styles.profile}> */}
-      {console.log(profileData)}
+      {/* {console.log(profileData)} */}
       {settingsDisplayed ? (
         <View>
           <TouchableOpacity onPress={toggleSettings}>
