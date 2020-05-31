@@ -2,6 +2,7 @@ import * as SQLite from "expo-sqlite";
 import donwloadFile from "./DownloadFile";
 import downloadBook from "./DownloadBook";
 import * as FileSystem from "expo-file-system";
+import downloadAlbum from "./DownloadAlbum";
 const db = SQLite.openDatabase("posts");
 var moment = require("moment");
 const { v4: uuidv4 } = require("uuid");
@@ -67,6 +68,7 @@ export default async function createPost(
 ) {
   imageIDs = [];
   book_id = null;
+  album_id = null;
 
   for (i = 0; i < Object.keys(images).length; i++) {
     image_id = await donwloadFile(images[i], heights[i], widths[i]);
@@ -87,8 +89,21 @@ export default async function createPost(
       book[1]
     );
   }
+  if (album[0]) {
+    const fileUri = FileSystem.documentDirectory + uuidv4();
+    let downloadObject = FileSystem.createDownloadResumable(album[2], fileUri);
+    let response = await downloadObject.downloadAsync();
 
-  addDataToDb(text, imageIDs, album, book_id, podcast, link);
+    album_id = await downloadAlbum(
+      response.uri,
+      response.height,
+      response.width,
+      album[0],
+      album[1]
+    );
+  }
+
+  addDataToDb(text, imageIDs, album_id, book_id, podcast, link);
 
   console.log("the post is saved!");
 

@@ -25,7 +25,6 @@ import Memories from "./Memories";
 import CreateButton from "./CreateButton";
 import CreateSheet from "./CreateSheet";
 import SettingsSheet from "./SettingsSheet";
-import DetailView from "./DetailView";
 
 const fetchFonts = () => {
   return Font.loadAsync({

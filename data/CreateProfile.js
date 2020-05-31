@@ -5,13 +5,14 @@ var moment = require("moment");
 insert = () => {
   db.transaction((tx) => {
     tx.executeSql(
-      "insert into profile_table (date, name, avatar_uri, height, width) values (?, ?, ?, ?, ?)",
+      "insert into profile_table (date, name, avatar_uri, height, width, premium) values (?, ?, ?, ?, ?, ?)",
       [
         moment().format("YYYY-MM-DD hh:mm:ss"),
         "Name",
         "../assets/avatar.jpg",
         500,
         500,
+        0,
       ]
     );
     tx.executeSql("SELECT * FROM profile_table", [], (tx, results) => {
@@ -27,7 +28,7 @@ insert = () => {
 export default async function createProfile() {
   db.transaction((tx) => {
     tx.executeSql(
-      "create table if not exists profile_table (id integer primary key not null, date string, name string, avatar_uri string, height integer, width integer)",
+      "create table if not exists profile_table (id integer primary key not null, date string, name string, avatar_uri string, height integer, width integer, premium integer)",
       []
     );
 

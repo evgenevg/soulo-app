@@ -43,6 +43,8 @@ export default function Card({
   post_id,
   book,
   books,
+  album,
+  albums,
 }) {
   // const [imageWidth, setImageWidth] = React.useState(0);
   const [imageHeight, setImageHeight] = React.useState(0);
@@ -52,6 +54,9 @@ export default function Card({
   const [bookTitle, setBookTitle] = React.useState("");
   const [bookAuthor, setBookAuthor] = React.useState("");
   const [bookPic, setBookPic] = React.useState("");
+  const [albumTitle, setAlbumTitle] = React.useState("");
+  const [albumAuthor, setAlbumAuthor] = React.useState("");
+  const [albumPic, setAlbumPic] = React.useState("");
   const [galleryHidden, setGalleryHidden] = React.useState(true);
   const [imageURIs, setImageURIs] = React.useState([]);
   const [imageHeights, setImageHeights] = React.useState([]);
@@ -116,6 +121,16 @@ export default function Card({
     }
   }
 
+  if (album && !albumAuthor) {
+    try {
+      setAlbumTitle(albums.find((x) => x.album_id === album).title);
+      setAlbumAuthor(albums.find((x) => x.album_id === album).author);
+      setAlbumPic(albums.find((x) => x.album_id === album).image_uri);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   if (!time) {
     postDate = moment(date, "YYYY-MM-DD hh:mm:ss").calendar();
     setTime(postDate);
@@ -149,6 +164,15 @@ export default function Card({
               <View style={{ paddingLeft: 10, paddingRight: 20 }}>
                 <Text style={styles.bookTitle}>{bookTitle}</Text>
                 <Text style={styles.bookAuthor}>{bookAuthor}</Text>
+              </View>
+            </View>
+          ) : null}
+          {albumAuthor ? (
+            <View style={styles.bookView}>
+              <Image style={styles.albumImage} source={{ uri: albumPic }} />
+              <View style={{ paddingLeft: 10, paddingRight: 20 }}>
+                <Text style={styles.bookTitle}>{albumTitle}</Text>
+                <Text style={styles.bookAuthor}>{albumAuthor}</Text>
               </View>
             </View>
           ) : null}
@@ -240,10 +264,16 @@ const styles = StyleSheet.create({
     width: 56,
     borderRadius: 5,
   },
+  albumImage: {
+    height: 76,
+    width: 76,
+    borderRadius: 5,
+  },
   bookTitle: {
     fontSize: 15,
     fontFamily: "druk",
     color: "#3B3F43",
+    paddingRight: 20,
   },
   bookAuthor: {
     fontSize: 14,

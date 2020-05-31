@@ -27,10 +27,17 @@ import { AppLoading } from "expo";
 const { v4: uuidv4 } = require("uuid");
 
 import searchBooks from "../api/BookSearch.js";
+import AlbumSearch from "../api/AlbumSearch.js";
 
 const screenHeight = Dimensions.get("window").height;
 
-export default function Search({ opened, toggleSearch, setBook }) {
+export default function Search({
+  opened,
+  toggleSearch,
+  setBook,
+  setAlbum,
+  searchType,
+}) {
   const top = React.useRef(new Animated.Value(screenHeight)).current;
   const [result, setResult] = React.useState([]);
   const [query, setQuery] = React.useState("");
@@ -60,6 +67,14 @@ export default function Search({ opened, toggleSearch, setBook }) {
     toggleSheet();
   }
 
+  getData = async () => {
+    if (searchType === "book") {
+      await getBooks();
+    } else {
+      await getAlbums();
+    }
+  };
+
   getBooks = async () => {
     setLoading(true);
     books = await searchBooks(query);
@@ -67,9 +82,21 @@ export default function Search({ opened, toggleSearch, setBook }) {
     setLoading(false);
   };
 
+  getAlbums = async () => {
+    setLoading(true);
+    albums = await AlbumSearch(query);
+    setResult(albums);
+    setLoading(false);
+  };
+
   selectItem = (title, author, image) => {
-    payload = [title, author, image];
-    setBook(payload);
+    if (searchType === "book") {
+      payload = [title, author[0], image];
+      setBook(payload);
+    } else {
+      payload = [title, author, image];
+      setAlbum(payload);
+    }
     closeSheet();
   };
 
@@ -84,7 +111,7 @@ export default function Search({ opened, toggleSearch, setBook }) {
         autoFocus={true}
         value={query}
         onChangeText={(query) => setQuery(query)}
-        onSubmitEditing={getBooks}
+        onSubmitEditing={getData}
       />
       <View>
         {loading ? (
@@ -96,9 +123,7 @@ export default function Search({ opened, toggleSearch, setBook }) {
             keyExtractor={(item) => item.title.toString() + uuidv4()}
             renderItem={({ item }) => (
               <TouchableOpacity
-                onPress={() =>
-                  selectItem(item.title, item.author[0], item.image)
-                }
+                onPress={() => selectItem(item.title, item.author, item.image)}
               >
                 <View style={{ paddingBottom: 50, flexDirection: "row" }}>
                   <Image

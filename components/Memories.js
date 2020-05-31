@@ -32,6 +32,7 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
   const [posts, setPosts] = React.useState(null);
   const [memories, setMemories] = React.useState(null);
   const [books, setBooks] = React.useState(null);
+  const [albums, setAlbums] = React.useState(null);
   const [postsLoaded, setPostsLoaded] = React.useState(false);
   const [viewHeight, setViewHeight] = React.useState(300);
 
@@ -96,6 +97,19 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
         }
       );
     });
+    await db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM albums ORDER BY id DESC",
+        [],
+        (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push(results.rows.item(i));
+          }
+          setAlbums(temp);
+        }
+      );
+    });
   }
 
   if (fetchData) {
@@ -139,7 +153,9 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
               image8={element.image8}
               image9={element.image9}
               book={element.book}
+              album={element.album}
               books={books}
+              albums={albums}
               navigation={navigation}
             />
           )}

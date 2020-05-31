@@ -44,13 +44,8 @@ export default function CreateSheet({
   const [postSent, setPostSent] = React.useState(false);
   const [searchOpened, setSearchOpened] = React.useState(false);
   const [book, setBook] = React.useState([]);
-
-  // resetState = () => {
-  //   setMessage("");
-  //   setImages([]);
-  //   setHeights([]);
-  //   setWidths([]);
-  // };
+  const [album, setAlbum] = React.useState([]);
+  const [searchType, setSearchType] = React.useState("book");
 
   inputRef = React.createRef();
 
@@ -87,16 +82,17 @@ export default function CreateSheet({
     setPickerTriggered(true);
   };
 
-  openSearch = () => {
+  openSearch = (type) => {
+    setSearchType(type);
     setSearchOpened(true);
   };
 
   sendPost = async () => {
-    if (message || images.length > 0 || book) {
-      await createPost(message, images, heights, widths, book);
+    if (message || images.length > 0 || book || album) {
+      await createPost(message, images, heights, widths, book, album);
       console.log(
         "Sending the following payload to the function: " +
-          [message, images, heights, widths, book]
+          [message, images, heights, widths, book, album]
       );
     }
     toggleCreateSheet();
@@ -113,11 +109,6 @@ export default function CreateSheet({
     }
   };
 
-  // if (postSent) {
-  //   toggleCreateSheet();
-  //   setPostSent(false);
-  // }
-
   return (
     <Animated.View style={[styles.sheet, { top: top }]}>
       {searchOpened ? (
@@ -125,6 +116,8 @@ export default function CreateSheet({
           opened={searchOpened}
           toggleSearch={toggleSearch}
           setBook={setBook}
+          setAlbum={setAlbum}
+          searchType={searchType}
         />
       ) : null}
       <View style={{ paddingHorizontal: 20, marginTop: 50 }}>
@@ -146,7 +139,9 @@ export default function CreateSheet({
           value={message}
           onChangeText={(message) => setMessage(message)}
         />
+        {/* Preview of the payload, will be removed later */}
         <Text>{book}</Text>
+        <Text>{album}</Text>
         <View style={styles.actionBar}>
           {/* <View style={[styles.placeholder]}>
           <Image
@@ -163,7 +158,7 @@ export default function CreateSheet({
             </TouchableOpacity>
           </View>
           <View style={[styles.placeholder]}>
-            <TouchableOpacity onPress={openSearch}>
+            <TouchableOpacity onPress={() => openSearch("book")}>
               <Image
                 source={require("../assets/icons/book.png")}
                 style={styles.contentIcon}
@@ -171,10 +166,12 @@ export default function CreateSheet({
             </TouchableOpacity>
           </View>
           <View style={[styles.placeholder]}>
-            <Image
-              source={require("../assets/icons/music.png")}
-              style={styles.contentIcon}
-            />
+            <TouchableOpacity onPress={() => openSearch("album")}>
+              <Image
+                source={require("../assets/icons/music.png")}
+                style={styles.contentIcon}
+              />
+            </TouchableOpacity>
           </View>
         </View>
         <ImagePick
