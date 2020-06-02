@@ -45,6 +45,7 @@ export default function Card({
   books,
   album,
   albums,
+  colors,
 }) {
   // const [imageWidth, setImageWidth] = React.useState(0);
   const [imageHeight, setImageHeight] = React.useState(0);
@@ -153,26 +154,63 @@ export default function Card({
             timeFrom: timeFrom,
             imageURIs: imageURIs,
             imageHeights: imageHeights,
+            colors: colors,
           })
         }
       >
         <View style={styles.content}>
-          {text ? <Text style={styles.text}>{text}</Text> : null}
+          {text ? (
+            <Text style={[styles.text, { color: colors.textUserGen }]}>
+              {text}
+            </Text>
+          ) : null}
           {bookAuthor ? (
-            <View style={styles.bookView}>
+            <View
+              style={[
+                styles.bookView,
+                { backgroundColor: colors.backgroundContent },
+              ]}
+            >
               <Image style={styles.bookImage} source={{ uri: bookPic }} />
               <View style={{ paddingLeft: 10, paddingRight: 20 }}>
-                <Text style={styles.bookTitle}>{bookTitle}</Text>
-                <Text style={styles.bookAuthor}>{bookAuthor}</Text>
+                <Text
+                  style={[styles.bookTitle, { color: colors.textSecondary }]}
+                >
+                  {bookTitle}
+                </Text>
+                <Text
+                  style={[
+                    styles.bookAuthor,
+                    { color: colors.textSmallCaption },
+                  ]}
+                >
+                  {bookAuthor}
+                </Text>
               </View>
             </View>
           ) : null}
           {albumAuthor ? (
-            <View style={styles.bookView}>
+            <View
+              style={[
+                styles.bookView,
+                { backgroundColor: colors.backgroundContent },
+              ]}
+            >
               <Image style={styles.albumImage} source={{ uri: albumPic }} />
               <View style={{ paddingLeft: 10, paddingRight: 20 }}>
-                <Text style={styles.bookTitle}>{albumTitle}</Text>
-                <Text style={styles.bookAuthor}>{albumAuthor}</Text>
+                <Text
+                  style={[styles.bookTitle, { color: colors.textSecondary }]}
+                >
+                  {albumTitle}
+                </Text>
+                <Text
+                  style={[
+                    styles.bookAuthor,
+                    { color: colors.textSmallCaption },
+                  ]}
+                >
+                  {albumAuthor}
+                </Text>
               </View>
             </View>
           ) : null}
@@ -195,7 +233,9 @@ export default function Card({
         </View>
         {/* content can be an image, a text or anything else */}
         <View style={styles.extraInfo}>
-          <Text style={styles.timestamp}>{time}</Text>
+          <Text style={[styles.timestamp, { color: colors.textSecondary }]}>
+            {time}
+          </Text>
           <TouchableOpacity onPress={() => eraseAlert(post_id)}>
             <Image
               style={styles.moreIcon}
@@ -215,7 +255,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 17,
     marginBottom: 20,
-    color: "#22272C",
     fontFamily: "sharp",
   },
   image: {
@@ -234,7 +273,6 @@ const styles = StyleSheet.create({
   },
   timestamp: {
     fontSize: 12,
-    color: "#3B3F43",
     fontFamily: "sharp",
   },
   moreIcon: {
@@ -254,7 +292,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     borderRadius: 13,
-    backgroundColor: "#F1F1F1",
     flexDirection: "row",
     paddingHorizontal: 15,
     marginBottom: 20,
@@ -272,12 +309,10 @@ const styles = StyleSheet.create({
   bookTitle: {
     fontSize: 15,
     fontFamily: "druk",
-    color: "#3B3F43",
     paddingRight: 20,
   },
   bookAuthor: {
     fontSize: 14,
     fontFamily: "sharp",
-    color: "#5C6369",
   },
 });

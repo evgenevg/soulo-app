@@ -16,6 +16,8 @@ import {
   useEffect,
 } from "react-native";
 
+import { useColorScheme } from "react-native-appearance";
+
 import * as Font from "expo-font";
 import { AppLoading } from "expo";
 import "react-native-gesture-handler";
@@ -25,6 +27,7 @@ import Memories from "./Memories";
 import CreateButton from "./CreateButton";
 import CreateSheet from "./CreateSheet";
 import SettingsSheet from "./SettingsSheet";
+import ColorSchemes from "../ColorSchemes.js";
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -42,6 +45,9 @@ export default function HomeScreen({ navigation }) {
   const [fetchData, setFetchData] = React.useState(false);
   const [postsNum, setPostsNum] = React.useState(0);
   const [profileData, setProfileData] = React.useState(0);
+
+  const colorScheme = useColorScheme();
+  const colors = ColorSchemes[colorScheme] || ColorSchemes.light;
 
   toggleCreateSheet = async () => {
     if (createSheetOpened) {
@@ -97,13 +103,16 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <Animated.View style={[styles.view]}>
+    <Animated.View
+      style={[styles.view, { backgroundColor: colors.backgroundPrimary }]}
+    >
       {createSheetOpened ? (
         <CreateSheet
           opened={createSheetOpened}
           toggleCreateSheet={toggleCreateSheet}
           fetchData={fetchData}
           setFetchData={setFetchData}
+          colors={colors}
         />
       ) : null}
 
@@ -112,6 +121,7 @@ export default function HomeScreen({ navigation }) {
         toggleSettings={toggleSettings}
         profileData={profileData}
         setProfileData={setProfileData}
+        colors={colors}
       />
       <Animated.View
         style={[
@@ -121,6 +131,7 @@ export default function HomeScreen({ navigation }) {
             opacity: opacity,
             height: "100%",
           },
+          { backgroundColor: colors.backgroundPrimary },
         ]}
       >
         <Profile
@@ -128,19 +139,29 @@ export default function HomeScreen({ navigation }) {
           postsNum={postsNum}
           profileData={profileData}
           setProfileData={setProfileData}
+          colors={colors}
         />
-        <View style={styles.content}>
+        <View
+          style={[
+            styles.content,
+            {
+              backgroundColor: colors.backgroundPrimary,
+              shadowColor: colors.shadow,
+            },
+          ]}
+        >
           <View style={styles.scroll}>
             <Memories
               fetchData={fetchData}
               setFetchData={setFetchData}
               setPostsNum={setPostsNum}
               navigation={navigation}
+              colors={colors}
             />
           </View>
         </View>
 
-        <CreateButton toggleCreateSheet={toggleCreateSheet} />
+        <CreateButton toggleCreateSheet={toggleCreateSheet} colors={colors} />
       </Animated.View>
     </Animated.View>
   );
@@ -152,7 +173,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
   },
   container: {
-    backgroundColor: "#fff",
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
   },
@@ -161,10 +181,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flex: 1,
     alignContent: "center",
-    backgroundColor: "#FFF",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: -7 },
     shadowOpacity: 0.07,
     shadowRadius: 15,
@@ -173,12 +191,5 @@ const styles = StyleSheet.create({
   scroll: {
     height: "100%",
     marginHorizontal: 20,
-  },
-  headline: {
-    fontSize: 35,
-    color: "#000000",
-    marginTop: 45,
-    marginBottom: 40,
-    fontFamily: "druk",
   },
 });

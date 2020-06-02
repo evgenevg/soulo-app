@@ -37,6 +37,7 @@ export default function SettingsSheet({
   toggleSettings,
   profileData,
   setProfileData,
+  colors,
 }) {
   const top = React.useRef(new Animated.Value(screenHeight)).current;
   const [message, setMessage] = React.useState("");
@@ -73,10 +74,17 @@ export default function SettingsSheet({
   };
 
   return (
-    <Animated.View style={[styles.sheet, { top: top }]}>
+    <Animated.View
+      style={[
+        styles.sheet,
+        { top: top, backgroundColor: colors.backgroundSecondary },
+      ]}
+    >
       <View style={styles.topBar}>
         <TouchableOpacity onPress={closeSheet}>
-          <Text style={styles.sendButton}>Back</Text>
+          <Text style={[styles.sendButton, { color: colors.textPrimary }]}>
+            Back
+          </Text>
         </TouchableOpacity>
       </View>
       {profileData ? (
@@ -117,7 +125,6 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingHorizontal: 20,
     overflow: "hidden",
-    backgroundColor: "#f0f3f5",
   },
   topBar: {
     paddingBottom: 30,

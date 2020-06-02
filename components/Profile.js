@@ -33,6 +33,7 @@ export default function Profile({
   postsNum,
   profileData,
   setProfileData,
+  colors,
 }) {
   const tabHeight = React.useRef(new Animated.Value(450)).current;
   const avatarSize = React.useRef(new Animated.Value(150)).current;
@@ -133,7 +134,12 @@ export default function Profile({
   }
 
   return (
-    <Animated.View style={[styles.profile, { height: tabHeight }]}>
+    <Animated.View
+      style={[
+        styles.profile,
+        { height: tabHeight, backgroundColor: colors.backgroundPrimary },
+      ]}
+    >
       {/* {console.log(profileData)} */}
       {settingsDisplayed ? (
         <View>
@@ -174,7 +180,12 @@ export default function Profile({
             ) : null}
           </TouchableOpacity>
           {profileData ? (
-            <Animated.Text style={[styles.name, { fontSize: nameSize }]}>
+            <Animated.Text
+              style={[
+                styles.name,
+                { fontSize: nameSize, color: colors.textSecondary },
+              ]}
+            >
               {profileData[0].name}
             </Animated.Text>
           ) : (
@@ -186,16 +197,28 @@ export default function Profile({
       </Animated.View>
       <View style={styles.counterGroup}>
         <View style={styles.counter}>
-          <Text style={styles.number}>{postsNum}</Text>
-          <Text style={styles.desc}>Memories</Text>
+          <Text style={[styles.number, { color: colors.textSecondary }]}>
+            {postsNum}
+          </Text>
+          <Text style={[styles.desc, { color: colors.textSecondary }]}>
+            Memories
+          </Text>
         </View>
         <View style={styles.counter}>
-          <Text style={styles.number}>310</Text>
-          <Text style={styles.desc}>Days</Text>
+          <Text style={[styles.number, { color: colors.textSecondary }]}>
+            310
+          </Text>
+          <Text style={[styles.desc, { color: colors.textSecondary }]}>
+            Days
+          </Text>
         </View>
         <View style={styles.counter}>
-          <Text style={styles.number}>1</Text>
-          <Text style={styles.desc}>Life</Text>
+          <Text style={[styles.number, { color: colors.textSecondary }]}>
+            1
+          </Text>
+          <Text style={[styles.desc, { color: colors.textSecondary }]}>
+            Life
+          </Text>
         </View>
       </View>
     </Animated.View>
@@ -204,7 +227,6 @@ export default function Profile({
 
 const styles = StyleSheet.create({
   profile: {
-    backgroundColor: "#FFF",
     paddingTop: 30,
     paddingHorizontal: 20,
     marginTop: 10,
@@ -226,7 +248,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   name: {
-    color: "#3B3F43",
     alignSelf: "center",
     marginHorizontal: 20,
     fontFamily: "druk",
@@ -248,12 +269,10 @@ const styles = StyleSheet.create({
     fontSize: 27,
     alignSelf: "center",
     fontFamily: "sharp",
-    color: "#3B3F43",
   },
   desc: {
     fontSize: 15,
     alignSelf: "center",
     fontFamily: "sharp",
-    color: "#3B3F43",
   },
 });

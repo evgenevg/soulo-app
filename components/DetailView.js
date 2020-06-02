@@ -29,23 +29,45 @@ export default function DetailView({ route, navigation }) {
     timeFrom,
     imageURIs,
     imageHeights,
+    colors,
   } = route.params;
   return (
-    <View style={styles.sheet}>
+    <View
+      style={[styles.sheet, { backgroundColor: colors.backgroundSecondary }]}
+    >
       <View style={styles.topBar}>
         <TouchableOpacity onPress={navigation.goBack}>
-          <Text style={styles.sendButton}>Back</Text>
+          <Text style={[styles.sendButton, { color: colors.textPrimary }]}>
+            Back
+          </Text>
         </TouchableOpacity>
       </View>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={styles.timestamp}>A memory from {timeFrom}</Text>
-        {text ? <Text style={styles.text}>{text}</Text> : null}
+        <Text style={[styles.timestamp, { color: colors.textPrimary }]}>
+          A memory from {timeFrom}
+        </Text>
+        {text ? (
+          <Text style={[styles.text, { color: colors.textUserGen }]}>
+            {text}
+          </Text>
+        ) : null}
         {bookAuthor ? (
-          <View style={styles.bookView}>
+          <View
+            style={[
+              styles.bookView,
+              { backgroundColor: colors.backgroundContent },
+            ]}
+          >
             <Image style={styles.bookImage} source={{ uri: bookPic }} />
             <View style={{ paddingLeft: 10, paddingRight: 20 }}>
-              <Text style={styles.bookTitle}>{bookTitle}</Text>
-              <Text style={styles.bookAuthor}>{bookAuthor}</Text>
+              <Text style={[styles.bookTitle, { color: colors.textSecondary }]}>
+                {bookTitle}
+              </Text>
+              <Text
+                style={[styles.bookAuthor, { color: colors.textSmallCaption }]}
+              >
+                {bookAuthor}
+              </Text>
             </View>
           </View>
         ) : null}
@@ -63,12 +85,11 @@ export default function DetailView({ route, navigation }) {
 
 const styles = StyleSheet.create({
   sheet: {
-    backgroundColor: "#f0f3f5",
     position: "absolute",
     zIndex: 101,
     width: "100%",
     height: "100%",
-    borderRadius: 20,
+    // borderRadius: 20,
     paddingTop: 50,
     paddingHorizontal: 10,
     overflow: "hidden",
@@ -88,7 +109,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 17,
     marginBottom: 20,
-    color: "#22272C",
     fontFamily: "sharp",
   },
   image: {
@@ -101,7 +121,6 @@ const styles = StyleSheet.create({
   },
   timestamp: {
     fontSize: 25,
-    color: "#1A1E22",
     fontFamily: "druk",
     marginBottom: 30,
   },
@@ -109,7 +128,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 15,
     borderRadius: 13,
-    backgroundColor: "#F1F1F1",
     flexDirection: "row",
     paddingHorizontal: 15,
     marginBottom: 20,
@@ -122,11 +140,9 @@ const styles = StyleSheet.create({
   bookTitle: {
     fontSize: 15,
     fontFamily: "druk",
-    color: "#3B3F43",
   },
   bookAuthor: {
     fontSize: 14,
     fontFamily: "sharp",
-    color: "#5C6369",
   },
 });

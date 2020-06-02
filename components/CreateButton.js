@@ -13,7 +13,7 @@ import {
   LayoutAnimation,
 } from "react-native";
 
-export default function CreateButton({ toggleCreateSheet }) {
+export default function CreateButton({ toggleCreateSheet, colors }) {
   const buttonSize = React.useRef(new Animated.Value(70)).current;
   const buttonBorder = React.useRef(new Animated.Value(13)).current;
 
@@ -59,6 +59,7 @@ export default function CreateButton({ toggleCreateSheet }) {
               height: buttonSize,
               width: buttonSize,
               borderWidth: buttonBorder,
+              borderColor: colors.textPrimary,
             },
           ]}
         />
@@ -81,7 +82,6 @@ const styles = StyleSheet.create({
   },
   create: {
     borderRadius: 35,
-    borderColor: "#000000",
     shadowColor: "#fff",
     shadowOffset: {
       width: 0,

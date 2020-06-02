@@ -34,6 +34,7 @@ export default function CreateSheet({
   opened,
   toggleCreateSheet,
   setFetchData,
+  colors,
 }) {
   const top = React.useRef(new Animated.Value(screenHeight)).current;
   const [message, setMessage] = React.useState("");
@@ -122,7 +123,12 @@ export default function CreateSheet({
   };
 
   return (
-    <Animated.View style={[styles.sheet, { top: top }]}>
+    <Animated.View
+      style={[
+        styles.sheet,
+        { top: top, backgroundColor: colors.backgroundSecondary },
+      ]}
+    >
       {searchOpened ? (
         <Search
           opened={searchOpened}
@@ -135,10 +141,14 @@ export default function CreateSheet({
       <View style={{ paddingHorizontal: 20, marginTop: 50 }}>
         <View style={styles.topBar}>
           <TouchableOpacity onPress={closeSheet}>
-            <Text style={styles.sendButton}>Back</Text>
+            <Text style={[styles.sendButton, { color: colors.textPrimary }]}>
+              Back
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={sendPost}>
-            <Text style={styles.sendButton}>Send</Text>
+            <Text style={[styles.sendButton, { color: colors.textPrimary }]}>
+              Send
+            </Text>
           </TouchableOpacity>
         </View>
         <TextInput
@@ -221,7 +231,6 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 20,
     overflow: "hidden",
-    backgroundColor: "#f0f3f5",
   },
   topBar: {
     paddingBottom: 30,

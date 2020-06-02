@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Button, View, Text } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -11,42 +12,6 @@ import { Easing } from "react-native";
 import HomeScreen from "./components/HomeScreen";
 import DetailView from "./components/DetailView";
 import { ScreenStackHeaderConfig } from "react-native-screens";
-
-// const MyTransition = {
-//   gestureDirection: "horizontal",
-//   transitionSpec: {
-//     open: TransitionSpecs.TransitionIOSSpec,
-//     close: TransitionSpecs.TransitionIOSSpec,
-//   },
-//   cardStyleInterpolator: ({ current, next, layouts }) => {
-//     return {
-//       cardStyle: {
-//         transform: [
-//           {
-//             translateX: current.progress.interpolate({
-//               inputRange: [0, 1],
-//               outputRange: [layouts.screen.width, 0],
-//             }),
-//           },
-//           //     {
-//           //       scale: next
-//           //         ? next.progress.interpolate({
-//           //             inputRange: [0, 1],
-//           //             outputRange: [1, 0.9],
-//           //           })
-//           //         : 1,
-//           //     },
-//         ],
-//       },
-//       // overlayStyle: {
-//       //   opacity: current.progress.interpolate({
-//       //     inputRange: [0, 1],
-//       //     outputRange: [0, 0.5],
-//       //   }),
-//       // },
-//     };
-//   },
-// };
 
 const config = {
   animation: "spring",

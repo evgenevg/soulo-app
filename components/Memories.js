@@ -28,7 +28,12 @@ import Card from "./Card";
 import erasePost from "../data/ErasePost";
 const winWidth = Dimensions.get("window").width;
 
-export default function Memories({ fetchData, setFetchData, setPostsNum }) {
+export default function Memories({
+  fetchData,
+  setFetchData,
+  setPostsNum,
+  colors,
+}) {
   const [posts, setPosts] = React.useState(null);
   const [memories, setMemories] = React.useState(null);
   const [books, setBooks] = React.useState(null);
@@ -133,7 +138,11 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
       {memories && posts ? (
         <FlatList
           data={memories}
-          ListHeaderComponent={<Text style={styles.headline}>Memories</Text>}
+          ListHeaderComponent={
+            <Text style={[styles.headline, { color: colors.textPrimary }]}>
+              Memories
+            </Text>
+          }
           renderItem={({ item: element }) => (
             <Card
               key={element.id}
@@ -157,25 +166,13 @@ export default function Memories({ fetchData, setFetchData, setPostsNum }) {
               books={books}
               albums={albums}
               navigation={navigation}
+              colors={colors}
             />
           )}
           keyExtractor={(element) => element.id.toString()}
           showsVerticalScrollIndicator={false}
         />
       ) : null}
-      {/* {posts
-        ? posts.map((element) => (
-            <Card
-              source={{
-                uri: element.uri,
-              }}
-              key={element.uri}
-              height={element.height}
-              width={element.width}
-              viewHeight={winWidth * (element.height / element.width)}
-            />
-          ))
-        : console.log("loading")} */}
     </View>
   );
 }
@@ -188,7 +185,6 @@ const styles = StyleSheet.create({
   },
   headline: {
     fontSize: 35,
-    color: "#000000",
     marginTop: 45,
     marginBottom: 40,
     fontFamily: "druk",
