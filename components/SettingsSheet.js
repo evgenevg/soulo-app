@@ -29,6 +29,11 @@ import * as Permissions from "expo-permissions";
 import updateName from "../data/UpdateName";
 import AvatarPicker from "./AvatarPicker";
 
+import * as SQLite from "expo-sqlite";
+import createProfile from "../data/CreateProfile";
+const db = SQLite.openDatabase("profile_db");
+var moment = require("moment");
+
 const screenHeight = Dimensions.get("window").height;
 
 export default function SettingsSheet({
@@ -41,12 +46,29 @@ export default function SettingsSheet({
   const top = React.useRef(new Animated.Value(screenHeight)).current;
   const [message, setMessage] = React.useState("");
   const [pickerTriggered, setPickerTriggered] = React.useState(false);
-  const [images, setImages] = React.useState(null);
+  const [profileLoaded, setProfileLoaded] = React.useState(false);
 
   inputRef = React.createRef();
 
+  fetchProfile = async () => {
+    await createProfile();
+    db.transaction((tx) => {
+      tx.executeSql("SELECT * FROM profile_table", [], (tx, results) => {
+        var temp = [];
+        for (let i = 0; i < results.rows.length; ++i) {
+          temp.push(results.rows.item(i));
+        }
+        setProfileData(temp);
+      });
+    });
+  };
+
+  if (!profileLoaded) {
+    fetchProfile();
+    setProfileLoaded(true);
+  }
+
   toggleSheet = () => {
-    // this.focusInputWithKeyboard();
     Animated.spring(top, {
       toValue: 60,
       speed: 10,
@@ -86,27 +108,43 @@ export default function SettingsSheet({
           </Text>
         </TouchableOpacity>
       </View>
+
       {profileData ? (
-        <TextInput
-          ref={this.inputRef}
-          style={styles.input}
-          placeholder={profileData[0].name}
-          keyboardAppearance="dark"
-          selectionColor="#000000"
-          value={message}
-          onChangeText={(message) => setMessage(message)}
-          onSubmitEditing={() => updateName(message)}
-        />
+        <View style={styles.avatarContainer}>
+          <TouchableOpacity onPress={openAlbum}>
+            <Image
+              source={{ uri: profileData[0].avatar_uri }}
+              style={styles.avatar}
+            />
+          </TouchableOpacity>
+        </View>
       ) : null}
 
       {profileData ? (
-        <TouchableOpacity onPress={openAlbum}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: colors.backgroundPrimary },
+          ]}
+        >
           <Image
-            source={{ uri: profileData[0].avatar_uri }}
-            style={{ height: 100, width: 100 }}
+            style={[styles.icon, { tintColor: colors.textPrimary }]}
+            source={require("../assets/icons/settings.png")}
           />
-        </TouchableOpacity>
+          <TextInput
+            ref={this.inputRef}
+            style={styles.input}
+            placeholder={profileData[0].name}
+            placeholderTextColor={colors.textPrimary}
+            keyboardAppearance="dark"
+            selectionColor={colors.textPrimary}
+            value={message}
+            onChangeText={(message) => setMessage(message)}
+            onSubmitEditing={() => updateName(message)}
+          />
+        </View>
       ) : null}
+
       <AvatarPicker
         pickerTriggered={pickerTriggered}
         setPickerTriggered={setPickerTriggered}
@@ -130,14 +168,38 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-
+  avatarContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    paddingBottom: 30,
+  },
+  avatar: {
+    height: 120,
+    width: 120,
+    borderRadius: 27,
+  },
   sendButton: {
     fontSize: 17,
     fontFamily: "druk",
   },
   input: {
-    fontSize: 20,
+    fontSize: 30,
     fontFamily: "sharp",
-    paddingBottom: 30,
+    // paddingBottom: 30,
+  },
+  section: {
+    width: "100%",
+    height: 80,
+    borderRadius: 18,
+    paddingHorizontal: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  icon: {
+    height: 30,
+    width: 30,
+    marginRight: 20,
   },
 });

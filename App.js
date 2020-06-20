@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Button, View, Text } from "react-native";
+import { Button, View, Text, Alert } from "react-native";
 import Navigation from "./components/Navigation";
 import Onboarding from "./components/Onboarding";
 import checkIfFirstLaunch from "./data/FirstLaunch";
+import { AppearanceProvider, useColorScheme } from "react-native-appearance";
 
 function App() {
   const [isFirstLaunch, setIsFirstLaunch] = React.useState(false);

@@ -236,7 +236,7 @@ export default function Card({
           </Text>
           <TouchableOpacity onPress={() => eraseAlert(post_id)}>
             <Image
-              style={styles.moreIcon}
+              style={[styles.moreIcon, { tintColor: colors.textSecondary }]}
               source={require("../assets/icons/more.png")}
             />
           </TouchableOpacity>

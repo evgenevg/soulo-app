@@ -71,11 +71,11 @@ export default function CreateButton({ toggleCreateSheet, colors }) {
 const styles = StyleSheet.create({
   container: {
     height: 50,
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+    // position: "absolute",
+    // bottom: 0,
+    // width: "100%",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
   opacity: {
     paddingBottom: 70,

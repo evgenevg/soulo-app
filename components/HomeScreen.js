@@ -27,7 +27,9 @@ import Memories from "./Memories";
 import CreateButton from "./CreateButton";
 import CreateSheet from "./CreateSheet";
 import SettingsSheet from "./SettingsSheet";
+import SearchSheet from "./SearchSheet";
 import ColorSchemes from "../ColorSchemes.js";
+import NavBar from "./NavBar";
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -42,6 +44,7 @@ export default function HomeScreen({ navigation }) {
   const scale = React.useRef(new Animated.Value(1)).current;
   const opacity = React.useRef(new Animated.Value(1)).current;
   const [settingsOpened, setSettingsOpened] = React.useState(false);
+  const [searchOpened, setSearchOpened] = React.useState(false);
   const [fetchData, setFetchData] = React.useState(false);
   const [postsNum, setPostsNum] = React.useState(0);
   const [profileData, setProfileData] = React.useState(0);
@@ -66,6 +69,16 @@ export default function HomeScreen({ navigation }) {
       unblurBackground();
     } else {
       setSettingsOpened(true);
+      blurBackground();
+    }
+  };
+
+  toggleSearch = () => {
+    if (searchOpened) {
+      setSearchOpened(false);
+      unblurBackground();
+    } else {
+      setSearchOpened(true);
       blurBackground();
     }
   };
@@ -103,9 +116,7 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <Animated.View
-      style={[styles.view, { backgroundColor: colors.backgroundPrimary }]}
-    >
+    <Animated.View style={styles.view}>
       {createSheetOpened ? (
         <CreateSheet
           opened={createSheetOpened}
@@ -123,6 +134,11 @@ export default function HomeScreen({ navigation }) {
         setProfileData={setProfileData}
         colors={colors}
       />
+      <SearchSheet
+        opened={searchOpened}
+        toggleSearch={toggleSearch}
+        colors={colors}
+      />
       <Animated.View
         style={[
           styles.container,
@@ -134,13 +150,13 @@ export default function HomeScreen({ navigation }) {
           { backgroundColor: colors.backgroundPrimary },
         ]}
       >
-        <Profile
+        {/* <Profile
           toggleSettings={toggleSettings}
           postsNum={postsNum}
           profileData={profileData}
           setProfileData={setProfileData}
           colors={colors}
-        />
+        /> */}
         <View
           style={[
             styles.content,
@@ -160,8 +176,14 @@ export default function HomeScreen({ navigation }) {
             />
           </View>
         </View>
+        <NavBar
+          toggleCreateSheet={toggleCreateSheet}
+          colors={colors}
+          toggleSettings={toggleSettings}
+          toggleSearch={toggleSearch}
+        />
 
-        <CreateButton toggleCreateSheet={toggleCreateSheet} colors={colors} />
+        {/* <CreateButton toggleCreateSheet={toggleCreateSheet} colors={colors} /> */}
       </Animated.View>
     </Animated.View>
   );
