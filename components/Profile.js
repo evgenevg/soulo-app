@@ -111,7 +111,7 @@ export default function Profile({
   };
 
   fetchProfile = async () => {
-    createProfile();
+    await createProfile();
     db.transaction((tx) => {
       tx.executeSql("SELECT * FROM profile_table", [], (tx, results) => {
         var temp = [];

@@ -16,8 +16,6 @@ import {
 } from "react-native";
 
 var moment = require("moment");
-
-import FitImage from "react-native-fit-image";
 import { useNavigation } from "@react-navigation/native";
 
 const winWidth = Dimensions.get("window").width;

@@ -27,7 +27,6 @@ import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 
 import updateName from "../data/UpdateName";
-import ImagePick from "./ImagePicker";
 import AvatarPicker from "./AvatarPicker";
 
 const screenHeight = Dimensions.get("window").height;
