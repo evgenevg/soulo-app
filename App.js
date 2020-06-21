@@ -11,14 +11,15 @@ function App() {
     false
   );
 
+  const fetchData = async () => {
+    const launch = await checkIfFirstLaunch();
+
+    setIsFirstLaunch(launch);
+    setHasCheckedAsyncStorage(true);
+    console.log("fetch triggered");
+  };
+
   React.useEffect(() => {
-    const fetchData = async () => {
-      const launch = await checkIfFirstLaunch();
-
-      setIsFirstLaunch(launch);
-      setHasCheckedAsyncStorage(true);
-    };
-
     fetchData();
   }, []);
 
@@ -31,7 +32,7 @@ function App() {
   }
 
   if (isFirstLaunch) {
-    return <Onboarding />;
+    return <Onboarding fetchData={fetchData} />;
   } else {
     return <Navigation />;
   }

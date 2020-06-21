@@ -39,7 +39,6 @@ export default function Memories({
   const [books, setBooks] = React.useState(null);
   const [albums, setAlbums] = React.useState(null);
   const [postsLoaded, setPostsLoaded] = React.useState(false);
-  const [viewHeight, setViewHeight] = React.useState(300);
 
   eraseAlert = (post_id) => {
     Alert.alert(
@@ -62,20 +61,6 @@ export default function Memories({
   };
 
   async function getData() {
-    await db.transaction((tx) => {
-      tx.executeSql(
-        "SELECT * FROM memories_db WHERE erased = 0 ORDER BY id DESC",
-        [],
-        (tx, results) => {
-          var temp = [];
-          for (let i = 0; i < results.rows.length; ++i) {
-            temp.push(results.rows.item(i));
-          }
-          setMemories(temp);
-          setPostsNum(temp.length);
-        }
-      );
-    });
     await db.transaction((tx) => {
       tx.executeSql(
         "SELECT * FROM imgs ORDER BY id DESC",
@@ -112,6 +97,20 @@ export default function Memories({
             temp.push(results.rows.item(i));
           }
           setAlbums(temp);
+        }
+      );
+    });
+    await db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM memories_db WHERE erased = 0 ORDER BY id DESC",
+        [],
+        (tx, results) => {
+          var temp = [];
+          for (let i = 0; i < results.rows.length; ++i) {
+            temp.push(results.rows.item(i));
+          }
+          setMemories(temp);
+          setPostsNum(temp.length);
         }
       );
     });

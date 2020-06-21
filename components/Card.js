@@ -105,7 +105,7 @@ export default function Card({
       width = posts.find((x) => x.image_id === image_id).width;
       viewHeight = winWidth * (height / width);
     } catch (error) {
-      console.log(error);
+      console.log("Error! " + error);
     }
     return [image_uri, viewHeight];
   }

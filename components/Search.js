@@ -37,6 +37,7 @@ export default function Search({
   setBook,
   setAlbum,
   searchType,
+  colors,
 }) {
   const top = React.useRef(new Animated.Value(screenHeight)).current;
   const [result, setResult] = React.useState([]);
@@ -101,44 +102,75 @@ export default function Search({
   };
 
   return (
-    <Animated.View style={[styles.sheet, { top: top }]}>
-      <TextInput
-        ref={this.inputRef}
-        style={styles.input}
-        placeholder="What are you looking for?"
-        keyboardAppearance="dark"
-        selectionColor="#000000"
-        autoFocus={true}
-        value={query}
-        onChangeText={(query) => setQuery(query)}
-        onSubmitEditing={getData}
-      />
+    <Animated.View
+      style={[
+        styles.sheet,
+        { top: top, backgroundColor: colors.backgroundOther },
+      ]}
+    >
+      <View style={styles.topBar}>
+        <TouchableOpacity onPress={closeSheet}>
+          <Text style={[styles.sendButton, { color: colors.textPrimary }]}>
+            Back
+          </Text>
+        </TouchableOpacity>
+      </View>
       <View>
-        {loading ? (
-          <ActivityIndicator size="large" />
-        ) : (
-          <FlatList
-            style={{ width: "100%" }}
-            data={result}
-            keyExtractor={(item) => item.title.toString() + uuidv4()}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => selectItem(item.title, item.author, item.image)}
-              >
-                <View style={{ paddingBottom: 50, flexDirection: "row" }}>
-                  <Image
-                    source={{ uri: item.image }}
-                    style={{ height: 50, width: 50 }}
-                  />
-                  <View style={{ paddingLeft: 20 }}>
-                    <Text style={{ fontWeight: "bold" }}>{item.title}</Text>
-                    <Text>{item.author}</Text>
-                  </View>
+        <FlatList
+          style={{ width: "100%" }}
+          showsVerticalScrollIndicator={false}
+          data={result}
+          keyExtractor={(item) => item.title.toString() + uuidv4()}
+          ListHeaderComponent={
+            <View
+              style={[
+                styles.section,
+                { backgroundColor: colors.backgroundPrimary },
+              ]}
+            >
+              <Image
+                style={[styles.icon, { tintColor: colors.textPrimary }]}
+                source={require("../assets/icons/search.png")}
+              />
+              <TextInput
+                ref={this.inputRef}
+                style={styles.input}
+                placeholder="What are you looking for?"
+                placeholderTextColor={colors.textPrimary}
+                keyboardAppearance="dark"
+                selectionColor={colors.textPrimary}
+                color={colors.textPrimary}
+                autoFocus={true}
+                value={query}
+                onChangeText={(query) => setQuery(query)}
+                onSubmitEditing={getData}
+              />
+            </View>
+          }
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => selectItem(item.title, item.author, item.image)}
+            >
+              <View style={{ paddingBottom: 50, flexDirection: "row" }}>
+                <Image
+                  source={{ uri: item.image }}
+                  style={{ height: 50, width: 50 }}
+                />
+                <View style={{ paddingLeft: 20 }}>
+                  <Text
+                    style={{ fontWeight: "bold", color: colors.textPrimary }}
+                  >
+                    {item.title}
+                  </Text>
+                  <Text style={{ color: colors.textPrimary }}>
+                    {item.author}
+                  </Text>
                 </View>
-              </TouchableOpacity>
-            )}
-          />
-        )}
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+        {loading ? <ActivityIndicator size="large" /> : null}
         {/* {result ? (
           <FlatList
             style={{ width: "100%" }}
@@ -172,18 +204,44 @@ export default function Search({
 const styles = StyleSheet.create({
   sheet: {
     position: "absolute",
-    zIndex: 100,
+    zIndex: 101,
     width: "100%",
     height: "100%",
     borderRadius: 20,
     paddingTop: 50,
     paddingHorizontal: 20,
     overflow: "hidden",
-    backgroundColor: "#d4e1ef",
+  },
+  topBar: {
+    paddingBottom: 30,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  sendButton: {
+    fontSize: 17,
+    fontFamily: "druk",
+  },
+  section: {
+    width: "100%",
+    height: 60,
+    borderRadius: 18,
+    paddingHorizontal: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    opacity: 0.5,
+    marginBottom: 50,
+  },
+  icon: {
+    height: 20,
+    width: 20,
+    marginRight: 20,
+    opacity: 0.2,
   },
   input: {
-    fontSize: 20,
+    fontSize: 17,
     fontFamily: "sharp",
-    paddingBottom: 30,
+    width: "100%",
+    // paddingBottom: 30,
   },
 });

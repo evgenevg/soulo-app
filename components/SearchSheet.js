@@ -88,7 +88,7 @@ export default function SearchSheet({ opened, toggleSearch, colors }) {
           placeholderTextColor={colors.textPrimary}
           keyboardAppearance="dark"
           selectionColor={colors.textPrimary}
-          editable="false"
+          editable={false}
         />
       </View>
       <View style={styles.placeholder}>

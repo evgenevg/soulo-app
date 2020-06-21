@@ -105,6 +105,32 @@ export default function HomeScreen({ navigation }) {
     }).start();
   };
 
+  hideHome = () => {
+    // Triggered when search is opened and home becomes tab no.3
+    Animated.timing(scale, {
+      toValue: 0.8,
+      duration: 300,
+      easing: Easing.in(),
+    }).start();
+    Animated.timing(opacity, {
+      duration: 100,
+      toValue: 0,
+    }).start();
+  };
+
+  showHome = () => {
+    // Triggered when search is closed
+    Animated.timing(scale, {
+      toValue: 0.9,
+      duration: 300,
+      easing: Easing.in(),
+    }).start();
+    Animated.timing(opacity, {
+      duration: 300,
+      toValue: 0.5,
+    }).start();
+  };
+
   if (!fontsLoaded) {
     return (
       <AppLoading
@@ -124,6 +150,8 @@ export default function HomeScreen({ navigation }) {
           fetchData={fetchData}
           setFetchData={setFetchData}
           colors={colors}
+          hideHome={hideHome}
+          showHome={showHome}
         />
       ) : null}
 

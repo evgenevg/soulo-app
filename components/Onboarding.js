@@ -21,7 +21,7 @@ import {
 import updateName from "../data/UpdateName";
 import AvatarPicker from "./AvatarPicker";
 
-export default function Onboarding() {
+export default function Onboarding({ fetchData }) {
   const [message, setMessage] = React.useState("");
   const [pickerTriggered, setPickerTriggered] = React.useState(false);
 
@@ -33,7 +33,10 @@ export default function Onboarding() {
 
   return (
     <View style={{ marginTop: 150 }}>
-      <Text>This is Onboarding</Text>
+      {/* Should be close onboarding. Needs to be animated transtioion into the main feed */}
+      <TouchableOpacity onPress={fetchData}>
+        <Text>This is Onboarding</Text>
+      </TouchableOpacity>
       <TextInput
         ref={this.inputRef}
         style={styles.input}

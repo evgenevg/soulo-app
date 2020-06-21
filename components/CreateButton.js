@@ -22,10 +22,10 @@ export default function CreateButton({ toggleCreateSheet, colors }) {
       LayoutAnimation.create(10, "easeInEaseOut", "scaleXY")
     );
     Animated.spring(buttonSize, {
-      toValue: 65,
+      toValue: 60,
     }).start();
     Animated.spring(buttonBorder, {
-      toValue: 11.5,
+      toValue: 11,
     }).start();
   };
 

@@ -30,7 +30,7 @@ export default function NavBar({
       LayoutAnimation.create(10, "easeInEaseOut", "scaleXY")
     );
     Animated.spring(searchSize, {
-      toValue: 32,
+      toValue: 30,
     }).start();
   };
 
@@ -49,7 +49,7 @@ export default function NavBar({
       LayoutAnimation.create(10, "easeInEaseOut", "scaleXY")
     );
     Animated.spring(settingsSize, {
-      toValue: 38,
+      toValue: 35,
     }).start();
   };
 
