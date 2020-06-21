@@ -138,6 +138,7 @@ export default function SettingsSheet({
             placeholderTextColor={colors.textPrimary}
             keyboardAppearance="dark"
             selectionColor={colors.textPrimary}
+            color={colors.textPrimary}
             value={message}
             onChangeText={(message) => setMessage(message)}
             onSubmitEditing={() => updateName(message)}

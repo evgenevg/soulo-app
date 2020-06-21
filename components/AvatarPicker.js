@@ -18,7 +18,11 @@ import * as Permissions from "expo-permissions";
 import donwloadFile from "../data/DownloadFile";
 import updateAvatar from "../data/UpdateAvatar";
 
-export default function AvatarPicker({ pickerTriggered, setPickerTriggered }) {
+export default function AvatarPicker({
+  pickerTriggered,
+  setPickerTriggered,
+  setImage,
+}) {
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -46,6 +50,11 @@ export default function AvatarPicker({ pickerTriggered, setPickerTriggered }) {
           fileUri
         );
         let response = await downloadObject.downloadAsync();
+        try {
+          setImage(fileUri);
+        } catch (e) {
+          console.log(e);
+        }
         await updateAvatar(response.uri, 500, 500);
       }
     } catch (E) {

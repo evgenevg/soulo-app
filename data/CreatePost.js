@@ -13,7 +13,9 @@ const addDataToDb = (
   album = null,
   book = null,
   podcast = null,
-  link = null
+  link = null,
+  tags = null,
+  primary = null
 ) => {
   // resetting the global variables first, so that the images from previous posts are not added here
   for (i = 0; i < 11; i++) {
@@ -28,12 +30,12 @@ const addDataToDb = (
 
   db.transaction((tx) => {
     tx.executeSql(
-      "create table if not exists memories_db (id integer primary key not null, date string, text string, image0 string, image1 string, image2 string, image3 string, image4 string, image5 string, image6 string, image7 string, image8 string, image9 string, album string, book integer, podcast integer, link integer, erased integer);",
+      "create table if not exists memories_db (id integer primary key not null, date string, text string, image0 string, image1 string, image2 string, image3 string, image4 string, image5 string, image6 string, image7 string, image8 string, image9 string, album string, book integer, podcast integer, link integer, erased integer, tags string, primary string);",
       []
     );
 
     tx.executeSql(
-      "insert into memories_db (date, text, album, book, podcast, link, image0, image1, image2, image3, image4, image5, image6, image7, image8, image9, erased) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+      "insert into memories_db (date, text, album, book, podcast, link, image0, image1, image2, image3, image4, image5, image6, image7, image8, image9, erased, tags, primary) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)",
       [
         moment().format("YYYY-MM-DD hh:mm:ss"),
         text,
@@ -51,6 +53,8 @@ const addDataToDb = (
         this.image7,
         this.image8,
         this.image9,
+        tags,
+        primary,
       ]
     );
   });
@@ -64,7 +68,9 @@ export default async function createPost(
   book = null,
   album = null,
   podcast = null,
-  link = null
+  link = null,
+  tags = null,
+  primary = null
 ) {
   imageIDs = [];
   book_id = null;
@@ -103,7 +109,7 @@ export default async function createPost(
     );
   }
 
-  addDataToDb(text, imageIDs, album_id, book_id, podcast, link);
+  addDataToDb(text, imageIDs, album_id, book_id, podcast, link, tags, primary);
 
   console.log("the post is saved!");
 

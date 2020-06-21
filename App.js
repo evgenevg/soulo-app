@@ -5,6 +5,8 @@ import Onboarding from "./components/Onboarding";
 import checkIfFirstLaunch from "./data/FirstLaunch";
 import { AppearanceProvider, useColorScheme } from "react-native-appearance";
 
+import Intro from "./components/Intro.js";
+
 function App() {
   const [isFirstLaunch, setIsFirstLaunch] = React.useState(false);
   const [hasCheckedAsyncStorage, setHasCheckedAsyncStorage] = React.useState(
@@ -34,7 +36,8 @@ function App() {
   if (isFirstLaunch) {
     return <Onboarding fetchData={fetchData} />;
   } else {
-    return <Navigation />;
+    // return <Navigation />;
+    return <Intro />;
   }
 }
 

@@ -95,6 +95,7 @@ export default function SearchSheet({ opened, toggleSearch, colors }) {
         <Image
           style={styles.image}
           source={require("../assets/icons/searchlater.png")}
+          resizeMode="contain"
         />
         <Text style={[styles.placeholderText, { color: colors.textPrimary }]}>
           Keep sharing to unlock search ☀️
@@ -152,8 +153,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: 255,
-    height: 191,
+    width: "80%",
     marginBottom: 20,
   },
   placeholderText: {
